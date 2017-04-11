@@ -71,7 +71,7 @@ public final class ModeSelection {
                 
                 mode = Mode.VERBAL;
                 modelTmp = createVerbal(dialogAct, arousal, valence, counter);
-                if (gender.equals("female")| gender.equals("male")&& age <= 40){ //young people
+                if (gender.equals("female")| gender.equals("male")&& age >= 70){ //elder people
                     if (country.equals("es")){
                         if (proximity.equals("close") && personality.equals("extroverted")){
                             //EXPRESSIVITY (copied from non verbal)
@@ -100,7 +100,7 @@ public final class ModeSelection {
 
                              //SOCIAL
                              Property hasSocial = modelTmp.getProperty(modeSelectionIRI + "#" + "hasSocial");
-                             Literal socLiteral = modelTmp.createLiteral("colloqiual");
+                             Literal socLiteral = modelTmp.createLiteral("heartly");
                              //dialogAct.addLiteral(hasSocial, socLiteral);
                              modelTmp.addLiteral(dialogAct, hasSocial, socLiteral);
                         }
@@ -138,11 +138,73 @@ public final class ModeSelection {
                              modelTmp.addLiteral(dialogAct, hasSocial, socLiteral);
                         }
                     }
-                    /*&& country.equals("es") 
-                    && proximity.equals("close") && personality.equals("extroverted")*/
+                }if (gender.equals("male") | gender.equals("female") && age <= 40){
+                    if (country.equals("es")){
+                        if (proximity.equals("close") && personality.equals("extroverted")){
+                            //EXPRESSIVITY (copied from non verbal)
+                             Property hasExpressivity = modelTmp.getProperty(modeSelectionIRI + "#" + "hasExpressivity");
+                             Literal expLiteral = modelTmp.createLiteral("expressive");
+                             //dialogAct.addLiteral(hasExpressivity, expLiteral);
+                             modelTmp.addLiteral(dialogAct, hasExpressivity, expLiteral);
+
+                             //PROXIMITY
+                             Property hasProximity = modelTmp.getProperty(modeSelectionIRI + "#" + "hasProximity");
+                             Literal proxLiteral = modelTmp.createLiteral("close");
+                             //dialogAct.addLiteral(hasProximity, proxLiteral);
+                             modelTmp.addLiteral(dialogAct, hasProximity, proxLiteral);
+
+                             //ATTITUDE
+                             Property hasAttitude = modelTmp.getProperty(modeSelectionIRI + "#" + "hasAttitude");
+                             Literal attiLiteral = modelTmp.createLiteral("joyful");
+                             //dialogAct.addLiteral(hasProximity, proxLiteral);
+                             modelTmp.addLiteral(dialogAct, hasAttitude, attiLiteral);
+
+                             //STYLE
+                             Property hasStyle = modelTmp.getProperty(modeSelectionIRI + "#" + "hasStyle");
+                             Literal styleLiteral = modelTmp.createLiteral("informal");
+                             //dialogAct.addLiteral(hasStyle, styleLiteral);
+                             modelTmp.addLiteral(dialogAct, hasStyle, styleLiteral);
+
+                             //SOCIAL
+                             Property hasSocial = modelTmp.getProperty(modeSelectionIRI + "#" + "hasSocial");
+                             Literal socLiteral = modelTmp.createLiteral("colloquial");
+                             //dialogAct.addLiteral(hasSocial, socLiteral);
+                             modelTmp.addLiteral(dialogAct, hasSocial, socLiteral);
+                        }
+                    }if (country.equals("ge")){
+                        if (proximity.equals("distant") && personality.equals("introverted")){
+                            //EXPRESSIVITY (copied from non verbal)
+                             Property hasExpressivity = modelTmp.getProperty(modeSelectionIRI + "#" + "hasExpressivity");
+                             Literal expLiteral = modelTmp.createLiteral("expressive");
+                             //dialogAct.addLiteral(hasExpressivity, expLiteral);
+                             modelTmp.addLiteral(dialogAct, hasExpressivity, expLiteral);
+
+                             //PROXIMITY
+                             Property hasProximity = modelTmp.getProperty(modeSelectionIRI + "#" + "hasProximity");
+                             Literal proxLiteral = modelTmp.createLiteral("medium close");
+                             //dialogAct.addLiteral(hasProximity, proxLiteral);
+                             modelTmp.addLiteral(dialogAct, hasProximity, proxLiteral);
+
+                             //ATTITUDE
+                             Property hasAttitude = modelTmp.getProperty(modeSelectionIRI + "#" + "hasAttitude");
+                             Literal attiLiteral = modelTmp.createLiteral("joyful");
+                             //dialogAct.addLiteral(hasProximity, proxLiteral);
+                             modelTmp.addLiteral(dialogAct, hasAttitude, attiLiteral);
+
+                             //STYLE
+                             Property hasStyle = modelTmp.getProperty(modeSelectionIRI + "#" + "hasStyle");
+                             Literal styleLiteral = modelTmp.createLiteral("formal");
+                             //dialogAct.addLiteral(hasStyle, styleLiteral);
+                             modelTmp.addLiteral(dialogAct, hasStyle, styleLiteral);
+
+                             //SOCIAL
+                             Property hasSocial = modelTmp.getProperty(modeSelectionIRI + "#" + "hasSocial");
+                             Literal socLiteral = modelTmp.createLiteral("heartly");
+                             //dialogAct.addLiteral(hasSocial, socLiteral);
+                             modelTmp.addLiteral(dialogAct, hasSocial, socLiteral);
+                        }
+                    }
                 }
-                
-            
                 
                 // check if an instance of the class Pork is contained in the input owl
                 Resource classInsRes = getResourceByClass(modelTmp, "Pork");
