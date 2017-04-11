@@ -28,36 +28,64 @@ public final class ModeSelection {
         
         SystemAction sa = new SystemAction(dmOutputOWL);
         
-        processResponses(sa);
+        processResponses(sa, profile);
     }
 
-    private void processResponses(SystemAction da) throws CustomException {
+    private void processResponses(SystemAction systemAction, UserProfileIni profile) throws CustomException {
         
-        float valence = da.getValence();
-        float arousal = da.getArousal();
-        List<Resource> dialogActs = da.getDialogActs();
+        float valence = systemAction.getValence();
+        float arousal = systemAction.getArousal();
+        List<Resource> dialogActs = systemAction.getDialogActs();
         
+        String gender = profile.getGender();
 		// process the read DAs in order to assign them to verbal vs non-verbal output and add respective mode-selection tags		
         for (int order=0; order < dialogActs.size(); order++) {
 
-            Resource resource = dialogActs.get(order);
+            Resource dialogAct = dialogActs.get(order);
             
-            String daClass = da.getClass(resource); // get the type of the DA instance
+            String daClass = systemAction.getClass(dialogAct); // get the type of the DA instance
             System.out.println(order + " DA is " + daClass);
-
-            Mode mode;
-            Model modelTmp;
+           
+            Mode mode = null;
+            Model modelTmp = null;
+            /*
             if (daClass.equals("PersonalGreet")) {	// create nonVerbal owl DA	
                 mode = Mode.NON_VERBAL;
                 modelTmp = createNonVerbal(order, arousal, valence, daClass, counter);
                 
                 
-            } else {	 // create verbal owl DA
+            }
+            */
+            if (daClass.equals("PersonalGreet")&& gender.equals("female")){ // create verbal owl DA
+                
                 mode = Mode.VERBAL;
-                modelTmp = createVerbal(resource, arousal, valence, counter);
+                modelTmp = createVerbal(dialogAct, arousal, valence, counter);
+                
+                //EXPRESSIVITY (copied from non verbal)
+                Property hasExpressivity = modelTmp.getProperty(modeSelectionIRI + "#" + "hasExpressivity");
+                Literal expLiteral = modelTmp.createLiteral("very expressive");
+                dialogAct.addLiteral(hasExpressivity, expLiteral);
+
+                //PROXIMITY
+                Property hasProximity = modelTmp.getProperty(modeSelectionIRI + "#" + "hasProximity");
+                Literal proxLiteral = modelTmp.createLiteral("close");
+                dialogAct.addLiteral(hasProximity, proxLiteral);
+
+                //STYLE
+                Property hasStyle = modelTmp.getProperty(modeSelectionIRI + "#" + "hasStyle");
+                Literal styleLiteral = modelTmp.createLiteral("informal");
+                dialogAct.addLiteral(hasStyle, styleLiteral);
+
+                //SOCIAL
+                Property hasSocial = modelTmp.getProperty(modeSelectionIRI + "#" + "hasSocial");
+                Literal socLiteral = modelTmp.createLiteral("reserveds");
+                dialogAct.addLiteral(hasSocial, socLiteral);
+                
 
             }
-            addDA(modelTmp, mode, order);
+            if (modelTmp != null && mode != null) {
+                addDA(modelTmp, mode, order);
+            }
         }
     }
  
@@ -97,7 +125,8 @@ public final class ModeSelection {
 
         Property hasExpressivity = modelTmp.getProperty(modeSelectionIRI + "#" + "hasExpressivity");
         Literal expLiteral = modelTmp.createLiteral("very expressive");
-        daRes.addLiteral(hasExpressivity, expLiteral);
+        daRes.addLiteral(hasExpressivity, expLiteral);    
+
 
         return modelTmp;
     }
@@ -136,11 +165,34 @@ public final class ModeSelection {
         Literal vLiteral = modelTmp.createTypedLiteral(valence);
         modelTmp.addLiteral(actionObj, hasValence, vLiteral);
         modelTmp.add(actionObj, containsSystemAct, da);
+        /*
+        //EXPRESSIVITY (copied from non verbal)
+        Property hasExpressivity = modelTmp.getProperty(modeSelectionIRI + "#" + "hasExpressivity");
+        Literal expLiteral = modelTmp.createLiteral("very expressive");
+        da.addLiteral(hasExpressivity, expLiteral);
+        
+        //PROXIMITY
+        Property hasProximity = modelTmp.getProperty(modeSelectionIRI + "#" + "hasProximity");
+        Literal proxLiteral = modelTmp.createLiteral("close");
+        da.addLiteral(hasProximity, proxLiteral);
+        
+        //STYLE
+        Property hasStyle = modelTmp.getProperty(modeSelectionIRI + "#" + "hasStyle");
+        Literal styleLiteral = modelTmp.createLiteral("informal");
+        da.addLiteral(hasStyle, styleLiteral);
 
+        //SOCIAL
+        Property hasSocial = modelTmp.getProperty(modeSelectionIRI + "#" + "hasSocial");
+        Literal socLiteral = modelTmp.createLiteral("reserveds");
+        da.addLiteral(hasSocial, socLiteral);
+        */
+       
         return modelTmp;
+        
+       
+        
 
     }
-
     
     public String decode(String str) throws UnsupportedEncodingException {
         return URLDecoder.decode(str, "UTF-8");

@@ -104,7 +104,7 @@ public class SystemAction {
     public float getValence() throws CustomException {
         return getValence(getAction());
     }
-    
+      
     public float getValence(Resource resource) throws CustomException {
         // read the valence  values (these are SystemAction level and apply to all of the contained DAs)
         Property hasValence = model.getProperty(dialogueIRI + "#" + "hasValence");

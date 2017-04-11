@@ -24,7 +24,7 @@ public class UserProfileIni {
     private static final String PERSONALITY_SECTION = "personality";
     private static final String TYPE_KEY = "type";
     private static final String PROXIMITY_KEY = "proximity";
-
+    private static final String PERSONALITY_KEY = "personality";
 
     private final HierarchicalINIConfiguration config;	
 
@@ -67,6 +67,10 @@ public class UserProfileIni {
     public String getProximity() {
         SubnodeConfiguration confSection = config.getSection(PERSONALITY_SECTION);
         return confSection.getString(PROXIMITY_KEY);
+    }
+     public String getPersonality() {
+        SubnodeConfiguration confSection = config.getSection(PERSONALITY_SECTION);
+        return confSection.getString(PERSONALITY_KEY);
     }
 }
 

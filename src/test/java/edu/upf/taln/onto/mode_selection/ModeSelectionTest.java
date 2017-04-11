@@ -21,7 +21,7 @@ public class ModeSelectionTest {
     @Test
     public void test() throws Exception {
 
-        String str = FileUtils.readFileToString(new File("src/test/resources/article.rdf"));
+        String str = FileUtils.readFileToString(new File("src/test/resources/dm-output-greet.rdf"));
 
         UserProfileIni profile = new UserProfileIni(new File("src/test/resources/user_profile.ini"));
         
@@ -42,6 +42,7 @@ public class ModeSelectionTest {
         keys = tmp.keySet();
         for (Integer key : keys) {
             System.out.println(key + " " + tmp.get(key));
+            System.out.println(tmp.get(key));
         }
     }
     
