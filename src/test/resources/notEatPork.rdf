@@ -1,0 +1,154 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:j.0="http://kristina-project.eu/ontologies/dialogue_actions#" > 
+  <rdf:Description rdf:about="http://temp#1cs4lf6amhllis6ctmesnua481">
+    <rdf:object rdf:resource="http://kristina-project.eu/ontologies/la/context#Theme"/>
+    <rdf:predicate rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+    <rdf:subject rdf:resource="http://kristina-project.eu/ontologies/la/eatPork#theme1"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://temp#8dci7mcs6c8t4b22osk8q9hju">
+    <rdf:object rdf:resource="http://kristina-project.eu/ontologies/la/onto#Eat"/>
+    <rdf:predicate rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+    <rdf:subject rdf:resource="http://kristina-project.eu/ontologies/la/eatPork#eat1"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://temp#lmbadvccoumv3a33fo7qumqk9b">
+    <rdf:object rdf:resource="http://kristina-project.eu/ontologies/la/eatPork#Thomas"/>
+    <rdf:predicate rdf:resource="http://kristina-project.eu/ontologies/la/context#classifies"/>
+    <rdf:subject rdf:resource="http://kristina-project.eu/ontologies/la/eatPork#agent1"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://temp#7jgos79mec5l9o0am90tbit4m3">
+    <rdf:object rdf:resource="http://kristina-project.eu/ontologies/la/eatPork#pork1"/>
+    <rdf:predicate rdf:resource="http://kristina-project.eu/ontologies/la/context#classifies"/>
+    <rdf:subject rdf:resource="http://kristina-project.eu/ontologies/la/eatPork#theme1"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://temp#59b264redi8qco87nmf1uj78om">
+    <rdf:object rdf:resource="http://kristina-project.eu/ontologies/la/eatPork#Thomas"/>
+    <rdf:predicate rdf:resource="http://kristina-project.eu/ontologies/la/context#includes"/>
+    <rdf:subject rdf:resource="http://kristina-project.eu/ontologies/la/eatPork#eatCtx1"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://temp#pcs4crgui3310r3n5ns2acjnr1">
+    <rdf:object rdf:resource="http://kristina-project.eu/ontologies/la/context#Agent"/>
+    <rdf:predicate rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+    <rdf:subject rdf:resource="http://kristina-project.eu/ontologies/la/eatPork#agent1"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://temp#77ufannkfdm1clhnm2qb7lllt8">
+    <rdf:object rdf:resource="http://kristina-project.eu/ontologies/la/eatPork#theme1"/>
+    <rdf:predicate rdf:resource="http://kristina-project.eu/ontologies/la/context#defines"/>
+    <rdf:subject rdf:resource="http://kristina-project.eu/ontologies/la/eatPork#eatDesc1"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://temp#iait23h09vl7se223ulp5qevap">
+    <rdf:object rdf:resource="http://kristina-project.eu/ontologies/la/eatPork#eat1"/>
+    <rdf:predicate rdf:resource="http://kristina-project.eu/ontologies/la/context#classifies"/>
+    <rdf:subject rdf:resource="http://kristina-project.eu/ontologies/la/eatPork#context1"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://temp#p0erspmsa10h9a4664oppr6994">
+    <rdf:object rdf:resource="http://kristina-project.eu/ontologies/la/onto#Pork"/>
+    <rdf:predicate rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+    <rdf:subject rdf:resource="http://kristina-project.eu/ontologies/la/eatPork#pork1"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://temp#6gutjduvgeoq10rkrm91f5nd6h">
+    <rdf:object rdf:resource="http://kristina-project.eu/ontologies/la/context#Situation"/>
+    <rdf:predicate rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+    <rdf:subject rdf:resource="http://kristina-project.eu/ontologies/la/eatPork#eatCtx1"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://temp#13gos7jio30o52g5sdgg2ccic2">
+    <rdf:object rdf:resource="http://kristina-project.eu/ontologies/la/eatPork#pork1"/>
+    <rdf:predicate rdf:resource="http://kristina-project.eu/ontologies/la/context#includes"/>
+    <rdf:subject rdf:resource="http://kristina-project.eu/ontologies/la/eatPork#eatCtx1"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://temp#1ei9t8ushq3j1hoh1tch1fd31a">
+    <rdf:object rdf:resource="http://kristina-project.eu/ontologies/la/context#ContextDescription"/>
+    <rdf:predicate rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+    <rdf:subject rdf:resource="http://kristina-project.eu/ontologies/la/eatPork#eatDesc1"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://temp#mkg47mok6q0gf8fglqvc2mpj67">
+    <rdf:object rdf:resource="http://kristina-project.eu/ontologies/la/eatPork#context1"/>
+    <rdf:predicate rdf:resource="http://kristina-project.eu/ontologies/la/context#defines"/>
+    <rdf:subject rdf:resource="http://kristina-project.eu/ontologies/la/eatPork#eatDesc1"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://temp#v3vsn2sbf1qh8c13l5qdd6pasn">
+    <rdf:object rdf:resource="http://kristina-project.eu/ontologies/la/context#Context"/>
+    <rdf:predicate rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+    <rdf:subject rdf:resource="http://kristina-project.eu/ontologies/la/eatPork#context1"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://temp#iibr0o8rkqsgjf0sq1tc2qluru">
+    <rdf:object rdf:resource="http://kristina-project.eu/ontologies/la/eatPork#agent1"/>
+    <rdf:predicate rdf:resource="http://kristina-project.eu/ontologies/la/context#defines"/>
+    <rdf:subject rdf:resource="http://kristina-project.eu/ontologies/la/eatPork#eatDesc1"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://temp#ddmpmrinbc1ppd7fkctl9a4moo">
+    <rdf:object rdf:resource="http://kristina-project.eu/ontologies/la/onto#CareRecipient"/>
+    <rdf:predicate rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+    <rdf:subject rdf:resource="http://kristina-project.eu/ontologies/la/eatPork#Thomas"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://kristina-project.eu/tmp#49fc92d6-b151-4fff-95ba-b8b585789fab">
+    <j.0:containsSemantics rdf:resource="http://temp#pcs4crgui3310r3n5ns2acjnr1"/>
+    <j.0:containsSemantics rdf:resource="http://temp#1ei9t8ushq3j1hoh1tch1fd31a"/>
+    <j.0:verbosity rdf:datatype="http://www.w3.org/2001/XMLSchema#int">0</j.0:verbosity>
+    <j.0:containsSemantics rdf:resource="http://temp#13gos7jio30o52g5sdgg2ccic2"/>
+	<j.0:containsSemantics rdf:resource="http://temp#13gos7jio30o52g5sdgg2ccic22"/>
+    <j.0:isFormal rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</j.0:isFormal>
+    <j.0:containsSemantics rdf:resource="http://temp#77ufannkfdm1clhnm2qb7lllt8"/>
+    <j.0:containsSemantics rdf:resource="http://temp#7jgos79mec5l9o0am90tbit4m3"/>
+    <j.0:containsSemantics rdf:resource="http://temp#mkg47mok6q0gf8fglqvc2mpj67"/>
+    <j.0:containsSemantics rdf:resource="http://temp#v3vsn2sbf1qh8c13l5qdd6pasn"/>
+    <j.0:isBelief rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</j.0:isBelief>
+    <j.0:containsSemantics rdf:resource="http://temp#p0erspmsa10h9a4664oppr6994"/>
+    <j.0:containsSemantics rdf:resource="http://temp#6gutjduvgeoq10rkrm91f5nd6h"/>
+    <j.0:containsSemantics rdf:resource="http://temp#iait23h09vl7se223ulp5qevap"/>
+    <j.0:containsSemantics rdf:resource="http://temp#pdgbmftl9ugtsonnpru243qqng"/>
+    <j.0:containsSemantics rdf:resource="http://temp#ddmpmrinbc1ppd7fkctl9a4moo"/>
+    <j.0:directness rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</j.0:directness>
+    <j.0:containsSemantics rdf:resource="http://temp#8dci7mcs6c8t4b22osk8q9hju"/>
+    <j.0:isAdvice rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</j.0:isAdvice>
+    <j.0:containsSemantics rdf:resource="http://temp#iibr0o8rkqsgjf0sq1tc2qluru"/>
+    <j.0:containsSemantics rdf:resource="http://temp#lmbadvccoumv3a33fo7qumqk9b"/>
+    <j.0:containsSemantics rdf:resource="http://temp#59b264redi8qco87nmf1uj78om"/>
+    <j.0:containsSemantics rdf:resource="http://temp#1cs4lf6amhllis6ctmesnua481"/>
+    <j.0:containsSemantics rdf:resource="http://temp#jkb2e6msh75j9ccrrillk78mr3"/>
+    <rdf:type rdf:resource="http://kristina-project.eu/ontologies/dialogue_actions#Declare"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://temp#pdgbmftl9ugtsonnpru243qqng">
+    <rdf:object rdf:resource="http://kristina-project.eu/ontologies/la/eatPork#eatDesc1"/>
+    <rdf:predicate rdf:resource="http://kristina-project.eu/ontologies/la/context#satisfies"/>
+    <rdf:subject rdf:resource="http://kristina-project.eu/ontologies/la/eatPork#eatCtx1"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://kristina-project.eu/tmp#f9842057-5447-4b1f-9945-108e2b84672d">
+    <j.0:startWith rdf:resource="http://kristina-project.eu/tmp#49fc92d6-b151-4fff-95ba-b8b585789fab"/>
+    <j.0:containsSystemAct rdf:resource="http://kristina-project.eu/tmp#49fc92d6-b151-4fff-95ba-b8b585789fab"/>
+    <j.0:hasArousal rdf:datatype="http://www.w3.org/2001/XMLSchema#double">0.14623839270720942</j.0:hasArousal>
+    <j.0:hasValence rdf:datatype="http://www.w3.org/2001/XMLSchema#double">0.08751159839939954</j.0:hasValence>
+    <rdf:type rdf:resource="http://kristina-project.eu/ontologies/dialogue_actions#SystemAction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://temp#jkb2e6msh75j9ccrrillk78mr3">
+    <rdf:object rdf:resource="http://kristina-project.eu/ontologies/la/eatPork#eat1"/>
+    <rdf:predicate rdf:resource="http://kristina-project.eu/ontologies/la/context#includesEvent"/>
+    <rdf:subject rdf:resource="http://kristina-project.eu/ontologies/la/eatPork#eatCtx1"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement"/>
+  </rdf:Description>
+        	
+  <rdf:Description rdf:about="http://temp#13gos7jio30o52g5sdgg2ccic22">
+    <rdf:object>false</rdf:object>
+    <rdf:predicate rdf:resource="http://kristina-project.eu/ontologies/la/context#hasTruthValue"/>	
+    <rdf:subject rdf:resource="http://kristina-project.eu/ontologies/la/eatPork#eatCtx1"/>
+	<rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement"/>
+  </rdf:Description>
+</rdf:RDF>
+
