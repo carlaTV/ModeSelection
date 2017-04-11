@@ -40,7 +40,15 @@ public final class ModeSelection {
         float arousal = systemAction.getArousal();
         List<Resource> dialogActs = systemAction.getDialogActs();
         
+        //identity
         String gender = profile.getGender();
+        int age = profile.getAge();
+        //culture
+        String country = profile.getCountry();
+        //personality
+        String proximity = profile.getProximity();
+        String personality = profile.getPersonality();
+        
 		// process the read DAs in order to assign them to verbal vs non-verbal output and add respective mode-selection tags		
         for (int order=0; order < dialogActs.size(); order++) {
 
@@ -59,7 +67,8 @@ public final class ModeSelection {
                 
             }
             */
-            if (daClass.equals("PersonalGreet")&& gender.equals("female")){ // create verbal owl DA
+            if (daClass.equals("PersonalGreet")&& gender.equals("female")| gender.equals("male")&& country.equals("es") 
+                    && proximity.equals("close") && personality.equals("extroverted")){ // create verbal owl DA
                 
                 mode = Mode.VERBAL;
                 modelTmp = createVerbal(dialogAct, arousal, valence, counter);
@@ -75,6 +84,12 @@ public final class ModeSelection {
                 Literal proxLiteral = modelTmp.createLiteral("close");
                 //dialogAct.addLiteral(hasProximity, proxLiteral);
                 modelTmp.addLiteral(dialogAct, hasProximity, proxLiteral);
+                
+                //ATTITUDE
+                Property hasAttitude = modelTmp.getProperty(modeSelectionIRI + "#" + "hasAttitude");
+                Literal attiLiteral = modelTmp.createLiteral("joyful");
+                //dialogAct.addLiteral(hasProximity, proxLiteral);
+                modelTmp.addLiteral(dialogAct, hasAttitude, attiLiteral);
 
                 //STYLE
                 Property hasStyle = modelTmp.getProperty(modeSelectionIRI + "#" + "hasStyle");
@@ -84,7 +99,7 @@ public final class ModeSelection {
 
                 //SOCIAL
                 Property hasSocial = modelTmp.getProperty(modeSelectionIRI + "#" + "hasSocial");
-                Literal socLiteral = modelTmp.createLiteral("reserveds");
+                Literal socLiteral = modelTmp.createLiteral("colloquial");
                 //dialogAct.addLiteral(hasSocial, socLiteral);
                 modelTmp.addLiteral(dialogAct, hasSocial, socLiteral);
                 
