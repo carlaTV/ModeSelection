@@ -1,5 +1,6 @@
 package edu.upf.taln.onto.mode_selection;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -13,6 +14,8 @@ public final class ModeSelection {
 
     static String dialogueIRI = "http://kristina-project.eu/ontologies/dialogue_actions";
     static String modeSelectionIRI = "http://kristina-project.eu/ontologies/mode_selection";
+    static String ontoIRI = "http://kristina-project.eu/ontologies/la/onto";
+    static String contextIRI = "http://kristina-project.eu/ontologies/la/context";
     static String baseIRI = "http://kristina-project.eu/ms";
     static int counter = 0;
 
@@ -64,27 +67,48 @@ public final class ModeSelection {
                 //EXPRESSIVITY (copied from non verbal)
                 Property hasExpressivity = modelTmp.getProperty(modeSelectionIRI + "#" + "hasExpressivity");
                 Literal expLiteral = modelTmp.createLiteral("very expressive");
-                dialogAct.addLiteral(hasExpressivity, expLiteral);
+                //dialogAct.addLiteral(hasExpressivity, expLiteral);
+           	    modelTmp.addLiteral(dialogAct, hasExpressivity, expLiteral);
 
                 //PROXIMITY
                 Property hasProximity = modelTmp.getProperty(modeSelectionIRI + "#" + "hasProximity");
                 Literal proxLiteral = modelTmp.createLiteral("close");
-                dialogAct.addLiteral(hasProximity, proxLiteral);
+                //dialogAct.addLiteral(hasProximity, proxLiteral);
+                modelTmp.addLiteral(dialogAct, hasProximity, proxLiteral);
 
                 //STYLE
                 Property hasStyle = modelTmp.getProperty(modeSelectionIRI + "#" + "hasStyle");
                 Literal styleLiteral = modelTmp.createLiteral("informal");
-                dialogAct.addLiteral(hasStyle, styleLiteral);
+                //dialogAct.addLiteral(hasStyle, styleLiteral);
+                modelTmp.addLiteral(dialogAct, hasStyle, styleLiteral);
 
                 //SOCIAL
                 Property hasSocial = modelTmp.getProperty(modeSelectionIRI + "#" + "hasSocial");
                 Literal socLiteral = modelTmp.createLiteral("reserveds");
-                dialogAct.addLiteral(hasSocial, socLiteral);
+                //dialogAct.addLiteral(hasSocial, socLiteral);
+                modelTmp.addLiteral(dialogAct, hasSocial, socLiteral);
                 
-
+                // check if an instance of the class Pork is contained in the input owl
+                Resource classInsRes = getResourceByClass(modelTmp, "Pork");
+                if (classInsRes != null) {
+                	System.out.println("This is the instance of the class pork: "+classInsRes.toString());
+                	// depending on what you have discussed with Leo, the respective annotation property could be added 
+                	// either at the DA level: modelTmp.addLiteral(dialogAct, hasX, xLiteral);
+                	// or at the instance level of this class: modelTmp.addLiteral(classInsRes, hasX, xLiteral);
+                }
+                
+                Resource falseTruthValueRes = getFalseTruthValueResource(modelTmp);
+                if (classInsRes != null) {
+                	System.out.println("This is the instance whose truth value is false: "+falseTruthValueRes.toString());
+                	// depending on what you have discussed with Leo, the respective annotation property could be added 
+                	// either at the DA level: modelTmp.addLiteral(dialogAct, hasY, yLiteral);
+                	// or at the instance level of this class: modelTmp.addLiteral(classInsRes, hasY, yLiteral);
+                }
+                
+                                               
             }
             if (modelTmp != null && mode != null) {
-                addDA(modelTmp, mode, order);
+               addDA(modelTmp, mode, order);
             }
         }
     }
@@ -210,4 +234,32 @@ public final class ModeSelection {
         return uri.substring(uri.lastIndexOf('#') + 1);
     }
 
+    
+    public Resource getResourceByClass(Model model, String className) {
+    	
+    	Resource insObj=null;
+    	RSIterator iter = model.listReifiedStatements();    	    	
+    	while (iter.hasNext()){		
+    		ReifiedStatement stmt = iter.nextRS();
+    		if (stmt.getStatement().getObject().toString().equals(ontoIRI + "#" + className))
+    			insObj = stmt.getStatement().getSubject();
+    	}
+        	
+        return insObj;
+        
+    }
+    
+    public Resource getFalseTruthValueResource(Model model) {
+    	
+    	Resource insObj=null;
+    	RSIterator iter = model.listReifiedStatements();    	    	
+    	while (iter.hasNext()){		
+    		ReifiedStatement stmt = iter.nextRS();
+    		if (stmt.getStatement().getPredicate().toString().equals(contextIRI + "#" + "hasTruthValue"))
+    			insObj = stmt.getStatement().getSubject();
+    	}
+        	
+        return insObj;
+        
+    }
 }
