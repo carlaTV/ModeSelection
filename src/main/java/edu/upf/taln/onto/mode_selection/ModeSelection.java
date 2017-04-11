@@ -67,41 +67,49 @@ public final class ModeSelection {
                 
             }
             */
-            if (daClass.equals("PersonalGreet")&& gender.equals("female")| gender.equals("male")&& country.equals("es") 
-                    && proximity.equals("close") && personality.equals("extroverted")){ // create verbal owl DA
+            if (daClass.equals("PersonalGreet")){ // create verbal owl DA
                 
                 mode = Mode.VERBAL;
                 modelTmp = createVerbal(dialogAct, arousal, valence, counter);
+                if (gender.equals("female")| gender.equals("male")&& age <= 40){ //young people
+                    if (country.equals("es")){
+                        if (proximity.equals("close") && personality.equals("extroverted")){
+                            //EXPRESSIVITY (copied from non verbal)
+                             Property hasExpressivity = modelTmp.getProperty(modeSelectionIRI + "#" + "hasExpressivity");
+                             Literal expLiteral = modelTmp.createLiteral(expr);
+                             //dialogAct.addLiteral(hasExpressivity, expLiteral);
+                             modelTmp.addLiteral(dialogAct, hasExpressivity, expLiteral);
+
+                             //PROXIMITY
+                             Property hasProximity = modelTmp.getProperty(modeSelectionIRI + "#" + "hasProximity");
+                             Literal proxLiteral = modelTmp.createLiteral(prox);
+                             //dialogAct.addLiteral(hasProximity, proxLiteral);
+                             modelTmp.addLiteral(dialogAct, hasProximity, proxLiteral);
+
+                             //ATTITUDE
+                             Property hasAttitude = modelTmp.getProperty(modeSelectionIRI + "#" + "hasAttitude");
+                             Literal attiLiteral = modelTmp.createLiteral(attitude);
+                             //dialogAct.addLiteral(hasProximity, proxLiteral);
+                             modelTmp.addLiteral(dialogAct, hasAttitude, attiLiteral);
+
+                             //STYLE
+                             Property hasStyle = modelTmp.getProperty(modeSelectionIRI + "#" + "hasStyle");
+                             Literal styleLiteral = modelTmp.createLiteral(style);
+                             //dialogAct.addLiteral(hasStyle, styleLiteral);
+                             modelTmp.addLiteral(dialogAct, hasStyle, styleLiteral);
+
+                             //SOCIAL
+                             Property hasSocial = modelTmp.getProperty(modeSelectionIRI + "#" + "hasSocial");
+                             Literal socLiteral = modelTmp.createLiteral(social);
+                             //dialogAct.addLiteral(hasSocial, socLiteral);
+                             modelTmp.addLiteral(dialogAct, hasSocial, socLiteral);
+                        }
+                    }
+                    /*&& country.equals("es") 
+                    && proximity.equals("close") && personality.equals("extroverted")*/
+                }
                 
-                //EXPRESSIVITY (copied from non verbal)
-                Property hasExpressivity = modelTmp.getProperty(modeSelectionIRI + "#" + "hasExpressivity");
-                Literal expLiteral = modelTmp.createLiteral("very expressive");
-                //dialogAct.addLiteral(hasExpressivity, expLiteral);
-           	    modelTmp.addLiteral(dialogAct, hasExpressivity, expLiteral);
-
-                //PROXIMITY
-                Property hasProximity = modelTmp.getProperty(modeSelectionIRI + "#" + "hasProximity");
-                Literal proxLiteral = modelTmp.createLiteral("close");
-                //dialogAct.addLiteral(hasProximity, proxLiteral);
-                modelTmp.addLiteral(dialogAct, hasProximity, proxLiteral);
-                
-                //ATTITUDE
-                Property hasAttitude = modelTmp.getProperty(modeSelectionIRI + "#" + "hasAttitude");
-                Literal attiLiteral = modelTmp.createLiteral("joyful");
-                //dialogAct.addLiteral(hasProximity, proxLiteral);
-                modelTmp.addLiteral(dialogAct, hasAttitude, attiLiteral);
-
-                //STYLE
-                Property hasStyle = modelTmp.getProperty(modeSelectionIRI + "#" + "hasStyle");
-                Literal styleLiteral = modelTmp.createLiteral("informal");
-                //dialogAct.addLiteral(hasStyle, styleLiteral);
-                modelTmp.addLiteral(dialogAct, hasStyle, styleLiteral);
-
-                //SOCIAL
-                Property hasSocial = modelTmp.getProperty(modeSelectionIRI + "#" + "hasSocial");
-                Literal socLiteral = modelTmp.createLiteral("colloquial");
-                //dialogAct.addLiteral(hasSocial, socLiteral);
-                modelTmp.addLiteral(dialogAct, hasSocial, socLiteral);
+            
                 
                 // check if an instance of the class Pork is contained in the input owl
                 Resource classInsRes = getResourceByClass(modelTmp, "Pork");
@@ -209,21 +217,6 @@ public final class ModeSelection {
         Property hasExpressivity = modelTmp.getProperty(modeSelectionIRI + "#" + "hasExpressivity");
         Literal expLiteral = modelTmp.createLiteral("very expressive");
         da.addLiteral(hasExpressivity, expLiteral);
-        
-        //PROXIMITY
-        Property hasProximity = modelTmp.getProperty(modeSelectionIRI + "#" + "hasProximity");
-        Literal proxLiteral = modelTmp.createLiteral("close");
-        da.addLiteral(hasProximity, proxLiteral);
-        
-        //STYLE
-        Property hasStyle = modelTmp.getProperty(modeSelectionIRI + "#" + "hasStyle");
-        Literal styleLiteral = modelTmp.createLiteral("informal");
-        da.addLiteral(hasStyle, styleLiteral);
-
-        //SOCIAL
-        Property hasSocial = modelTmp.getProperty(modeSelectionIRI + "#" + "hasSocial");
-        Literal socLiteral = modelTmp.createLiteral("reserveds");
-        da.addLiteral(hasSocial, socLiteral);
         */
        
         return modelTmp;
@@ -277,4 +270,39 @@ public final class ModeSelection {
         return insObj;
         
     }
+    
+   /* public String[] SetOutput(String expr, String prox, String attitude, String style, String social ){
+        String[] characteristics = new String[5];
+        Model modelTmp = ModelFactory.createDefaultModel();
+        String daClass = systemAction.getClass(dialogAct);
+        Property hasExpressivity = modelTmp.getProperty(modeSelectionIRI + "#" + "hasExpressivity");
+        Literal expLiteral = modelTmp.createLiteral(expr);
+        //dialogAct.addLiteral(hasExpressivity, expLiteral);
+        modelTmp.addLiteral(dialogAct, hasExpressivity, expLiteral);
+
+        //PROXIMITY
+        Property hasProximity = modelTmp.getProperty(modeSelectionIRI + "#" + "hasProximity");
+        Literal proxLiteral = modelTmp.createLiteral(prox);
+        //dialogAct.addLiteral(hasProximity, proxLiteral);
+        modelTmp.addLiteral(dialogAct, hasProximity, proxLiteral);
+
+        //ATTITUDE
+        Property hasAttitude = modelTmp.getProperty(modeSelectionIRI + "#" + "hasAttitude");
+        Literal attiLiteral = modelTmp.createLiteral(attitude);
+        //dialogAct.addLiteral(hasProximity, proxLiteral);
+        modelTmp.addLiteral(dialogAct, hasAttitude, attiLiteral);
+
+        //STYLE
+        Property hasStyle = modelTmp.getProperty(modeSelectionIRI + "#" + "hasStyle");
+        Literal styleLiteral = modelTmp.createLiteral(style);
+        //dialogAct.addLiteral(hasStyle, styleLiteral);
+        modelTmp.addLiteral(dialogAct, hasStyle, styleLiteral);
+
+        //SOCIAL
+        Property hasSocial = modelTmp.getProperty(modeSelectionIRI + "#" + "hasSocial");
+        Literal socLiteral = modelTmp.createLiteral(social);
+        //dialogAct.addLiteral(hasSocial, socLiteral);
+        modelTmp.addLiteral(dialogAct, hasSocial, socLiteral);
+        return characteristics;
+    }*/
 }
