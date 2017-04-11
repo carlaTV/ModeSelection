@@ -23,7 +23,7 @@ public class ModeSelectionTest {
 
         String str = FileUtils.readFileToString(new File("src/test/resources/dm-output-greet.rdf"));    	
 
-        UserProfileIni profile = new UserProfileIni(new File("src/test/resources/user_profile.ini"));
+        UserProfileIni profile = new UserProfileIni(new File("src/test/resources/elder_german.ini"));
         
         ModeSelection mdParser = new ModeSelection(str, profile);
 
