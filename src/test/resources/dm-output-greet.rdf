@@ -1,0 +1,20 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:j.0="http://kristina-project.eu/ontologies/dialogue_actions#" > 
+  <rdf:Description rdf:about="http://kristina-project.eu/tmp#fa3a9e91-3fb6-44ae-8e12-473d4fec1008">
+    <j.0:containsSystemAct rdf:resource="http://kristina-project.eu/tmp#7c9bf70e-621f-494a-9a32-55a3b729aebf"/>
+    <j.0:startWith rdf:resource="http://kristina-project.eu/tmp#79a474f4-cd78-475d-9a7d-3789cdb7c789"/>
+    <j.0:containsSystemAct rdf:resource="http://kristina-project.eu/tmp#79a474f4-cd78-475d-9a7d-3789cdb7c789"/>
+    <j.0:hasArousal rdf:datatype="http://www.w3.org/2001/XMLSchema#double">0.25</j.0:hasArousal>
+    <j.0:hasValence rdf:datatype="http://www.w3.org/2001/XMLSchema#double">0.17441585693547662</j.0:hasValence>
+    <rdf:type rdf:resource="http://kristina-project.eu/ontologies/dialogue_actions#SystemAction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://kristina-project.eu/tmp#79a474f4-cd78-475d-9a7d-3789cdb7c789">
+    <j.0:followedBy rdf:resource="http://kristina-project.eu/tmp#7c9bf70e-621f-494a-9a32-55a3b729aebf"/>
+    <rdf:type rdf:resource="http://kristina-project.eu/ontologies/dialogue_actions#PersonalGreet"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://kristina-project.eu/tmp#7c9bf70e-621f-494a-9a32-55a3b729aebf">
+    <rdf:type rdf:resource="http://kristina-project.eu/ontologies/dialogue_actions#AskMood"/>
+  </rdf:Description>
+</rdf:RDF>
+

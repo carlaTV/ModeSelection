@@ -1,0 +1,161 @@
+package edu.upf.taln.onto.mode_selection;
+
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+
+import com.hp.hpl.jena.rdf.model.*;
+
+public final class ModeSelection {
+
+    static String dialogueIRI = "http://kristina-project.eu/ontologies/dialogue_actions";
+    static String modeSelectionIRI = "http://kristina-project.eu/ontologies/mode_selection";
+    static String baseIRI = "http://kristina-project.eu/ms";
+    static int counter = 0;
+
+    Map<Integer, String> verbalDialogueElements = new HashMap<>();
+    Map<Integer, String> nonVerbalDialogueElements = new HashMap<>();
+
+    enum Mode {
+
+        VERBAL, NON_VERBAL
+    };
+
+    public ModeSelection(String dmOutputOWL, UserProfileIni profile) throws CustomException, UnsupportedEncodingException {
+        
+        SystemAction sa = new SystemAction(dmOutputOWL);
+        
+        processResponses(sa);
+    }
+
+    private void processResponses(SystemAction da) throws CustomException {
+        
+        float valence = da.getValence();
+        float arousal = da.getArousal();
+        List<Resource> dialogActs = da.getDialogActs();
+        
+		// process the read DAs in order to assign them to verbal vs non-verbal output and add respective mode-selection tags		
+        for (int order=0; order < dialogActs.size(); order++) {
+
+            Resource resource = dialogActs.get(order);
+            
+            String daClass = da.getClass(resource); // get the type of the DA instance
+            System.out.println(order + " DA is " + daClass);
+
+            Mode mode;
+            Model modelTmp;
+            if (daClass.equals("PersonalGreet")) {	// create nonVerbal owl DA	
+                mode = Mode.NON_VERBAL;
+                modelTmp = createNonVerbal(order, arousal, valence, daClass, counter);
+                
+                
+            } else {	 // create verbal owl DA
+                mode = Mode.VERBAL;
+                modelTmp = createVerbal(resource, arousal, valence, counter);
+
+            }
+            addDA(modelTmp, mode, order);
+        }
+    }
+ 
+    public void addDA(Model model, Mode mode, Integer order) {
+        
+        ByteArrayOutputStream nonVerbalStream = new ByteArrayOutputStream();
+        model.write(nonVerbalStream, "RDF/XML");
+        String owlStr = nonVerbalStream.toString();
+        
+        if (mode == Mode.NON_VERBAL) {
+            nonVerbalDialogueElements.put(order, owlStr);
+        } else { // 
+            verbalDialogueElements.put(order, owlStr);
+        }
+        model.close();
+        
+    }
+
+    private Model createNonVerbal(int order, float arousal, float valence, String responseCls, int counter) {
+
+        Model modelTmp = ModelFactory.createDefaultModel();
+        Property rdfType = modelTmp.getProperty("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
+        Property hasOrder = modelTmp.createProperty(dialogueIRI + "#" + "hasOrder");
+        Property hasArousal = modelTmp.createProperty(dialogueIRI + "#" + "hasArousal");
+        Property hasValence = modelTmp.createProperty(dialogueIRI + "#" + "hasValence");
+
+        Resource daRes = modelTmp.createResource(baseIRI + "ins" + counter++);
+        Resource daCls = modelTmp.createResource(dialogueIRI + "#" + responseCls);
+        daRes.addProperty(rdfType, daCls);
+
+        Literal aLiteral = modelTmp.createTypedLiteral(arousal);
+        daRes.addLiteral(hasArousal, aLiteral);
+        Literal vLiteral = modelTmp.createTypedLiteral(valence);
+        daRes.addLiteral(hasValence, vLiteral);
+        Literal oLiteral = modelTmp.createTypedLiteral(order);
+        daRes.addLiteral(hasOrder, oLiteral);
+
+        Property hasExpressivity = modelTmp.getProperty(modeSelectionIRI + "#" + "hasExpressivity");
+        Literal expLiteral = modelTmp.createLiteral("very expressive");
+        daRes.addLiteral(hasExpressivity, expLiteral);
+
+        return modelTmp;
+    }
+
+    private Model createVerbal(Resource da, float arousal, float valence, int counter) {
+
+        Model modelTmp = ModelFactory.createDefaultModel();
+
+        StmtIterator iter = da.listProperties();
+        while (iter.hasNext()) {
+            Statement stmt = iter.nextStatement();
+
+            if (!"followedBy".equals(removePrefix(stmt.getPredicate().toString()))) {
+                modelTmp.add(stmt);
+                if ("containsSemantics".equals(removePrefix(stmt.getPredicate().toString()))) {
+                    StmtIterator reifiedIter = stmt.getObject().asResource().listProperties();
+                    while (reifiedIter.hasNext()) {
+                        modelTmp.add(reifiedIter.nextStatement());
+                    }
+                }
+            }
+        }
+
+        Property rdfType = modelTmp.getProperty("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
+        Property hasOrder = modelTmp.createProperty(dialogueIRI + "#" + "hasOrder");
+        Property hasArousal = modelTmp.createProperty(dialogueIRI + "#" + "hasArousal");
+        Property hasValence = modelTmp.createProperty(dialogueIRI + "#" + "hasValence");
+        Property containsSystemAct = modelTmp.createProperty(dialogueIRI + "#" + "containsSystemAct");
+
+        Resource actionObj = modelTmp.createResource(baseIRI + "ins" + counter++);
+        Resource systemActionClass = modelTmp.createResource(dialogueIRI + "#" + "SystemAction"); // to facilitate parsing (recognition of DA object) in OntoDialogueAct
+        modelTmp.add(actionObj, rdfType, systemActionClass);
+
+        Literal aLiteral = modelTmp.createTypedLiteral(arousal);
+        modelTmp.addLiteral(actionObj, hasArousal, aLiteral);
+        Literal vLiteral = modelTmp.createTypedLiteral(valence);
+        modelTmp.addLiteral(actionObj, hasValence, vLiteral);
+        modelTmp.add(actionObj, containsSystemAct, da);
+
+        return modelTmp;
+
+    }
+
+    
+    public String decode(String str) throws UnsupportedEncodingException {
+        return URLDecoder.decode(str, "UTF-8");
+    }
+
+    public Map<Integer, String> getVerbalDialogueElements() {
+        return verbalDialogueElements;
+    }
+
+    public Map<Integer, String> getNonVerbalDialogueElements() {
+        return nonVerbalDialogueElements;
+    }
+
+    public String removePrefix(String uri) {
+        return uri.substring(uri.lastIndexOf('#') + 1);
+    }
+
+}
