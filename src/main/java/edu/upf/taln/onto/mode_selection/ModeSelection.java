@@ -171,6 +171,53 @@ public final class ModeSelection {
             if (modelTmp != null && mode != null) {
                addDA(modelTmp, mode, order);
             }
+            
+           //  GOOD BYE
+           if (daClass.equals("GoodBye")){ // create verbal owl DA
+                
+                mode = Mode.VERBAL;
+                modelTmp = createVerbal(dialogAct, arousal, valence, counter);
+                if (gender.equals("female")| gender.equals("male")){ //elder people
+                    if (proximity.equals("close") && personality.equals("extroverted")&& country.equals("es")){
+                        if ( age >= 70){
+                            addCharacteristics(modelTmp, dialogAct, "expressive ","close","joyful","formal","heartly");
+                    
+                        }if (age <=40){
+                            addCharacteristics(modelTmp, dialogAct, "expressive","close","joyful","informal","colloquial");
+                        }
+                    
+                    }if (personality.equals("introverted")&& country.equals("ge")){
+                        if ( proximity.equals("distant") && age >= 70){
+                            addCharacteristics(modelTmp, dialogAct, "expressive","distant","joyful","formal","reserved");
+                    
+                        }if (proximity.equals("close") && age <=40){
+                            addCharacteristics(modelTmp, dialogAct, "expressive","close","joyful","formal","reserved");
+                        }
+                    }
+                }
+                
+                // check if an instance of the class Pork is contained in the input owl
+                Resource classInsRes = getResourceByClass(modelTmp, "Pork");
+                if (classInsRes != null) {
+                	System.out.println("This is the instance of the class pork: "+classInsRes.toString());
+                	// depending on what you have discussed with Leo, the respective annotation property could be added 
+                	// either at the DA level: modelTmp.addLiteral(dialogAct, hasX, xLiteral);
+                	// or at the instance level of this class: modelTmp.addLiteral(classInsRes, hasX, xLiteral);
+                }
+                
+                Resource falseTruthValueRes = getFalseTruthValueResource(modelTmp);
+                if (classInsRes != null) {
+                	System.out.println("This is the instance whose truth value is false: "+falseTruthValueRes.toString());
+                	// depending on what you have discussed with Leo, the respective annotation property could be added 
+                	// either at the DA level: modelTmp.addLiteral(dialogAct, hasY, yLiteral);
+                	// or at the instance level of this class: modelTmp.addLiteral(classInsRes, hasY, yLiteral);
+                }
+                
+                                               
+            }
+            if (modelTmp != null && mode != null) {
+               addDA(modelTmp, mode, order);
+            }
         }
     }
  
