@@ -67,7 +67,8 @@ public final class ModeSelection {
                 
             }
             */
-            if (daClass.equals("PersonalGreet")){ // create verbal owl DA
+            //PERSONAL GREET or GREETING
+            if (daClass.equals("PersonalGreet")| daClass.equals("Greeting")){ // create verbal owl DA
                 
                 mode = Mode.VERBAL;
                 modelTmp = createVerbal(dialogAct, arousal, valence, counter);
@@ -76,11 +77,11 @@ public final class ModeSelection {
                         if (proximity.equals("close") && personality.equals("extroverted")){
                             
 
-                             //SOCIAL
+                            /* //SOCIAL
                              Property hasSocial = modelTmp.getProperty(modeSelectionIRI + "#" + "hasSocial");
                              Literal socLiteral = modelTmp.createLiteral("heartly");
                              //dialogAct.addLiteral(hasSocial, socLiteral);
-                             modelTmp.addLiteral(dialogAct, hasSocial, socLiteral);
+                             modelTmp.addLiteral(dialogAct, hasSocial, socLiteral);*/
                              addCharacteristics(modelTmp, dialogAct, "very expressive","close","joyful","informal","colloquial");
                         }
                     }
@@ -100,6 +101,51 @@ public final class ModeSelection {
                         if (proximity.equals("distant") && personality.equals("introverted")){
                              addCharacteristics(modelTmp, dialogAct, "expressive","medium close","joyful","formal","heartly");
                         }
+                    }
+                }
+                
+                // check if an instance of the class Pork is contained in the input owl
+                Resource classInsRes = getResourceByClass(modelTmp, "eat Pork");
+                if (classInsRes != null) {
+                	System.out.println("This is the instance of the class pork: "+classInsRes.toString());
+                	// depending on what you have discussed with Leo, the respective annotation property could be added 
+                	// either at the DA level: modelTmp.addLiteral(dialogAct, hasX, xLiteral);
+                	// or at the instance level of this class: modelTmp.addLiteral(classInsRes, hasX, xLiteral);
+                }
+                
+                Resource falseTruthValueRes = getFalseTruthValueResource(modelTmp);
+                if (classInsRes != null) {
+                	System.out.println("This is the instance whose truth value is false: "+falseTruthValueRes.toString());
+                	// depending on what you have discussed with Leo, the respective annotation property could be added 
+                	// either at the DA level: modelTmp.addLiteral(dialogAct, hasY, yLiteral);
+                	// or at the instance level of this class: modelTmp.addLiteral(classInsRes, hasY, yLiteral);
+                }
+                
+                                               
+            }
+            //APOLOGISE
+            if (daClass.equals("Apologise")){ // create verbal owl DA
+                
+                mode = Mode.VERBAL;
+                modelTmp = createVerbal(dialogAct, arousal, valence, counter);
+                if (gender.equals("female")| gender.equals("male")){ //elder people
+                    
+                    if (proximity.equals("distant") && personality.equals("introverted")){
+                        if ( age >= 70){
+                            if (country.equals("es")){
+
+                                addCharacteristics(modelTmp, dialogAct, "expressive","close","serious","formal","heartly");
+                            }
+                            if (country.equals("ge")){
+
+                                addCharacteristics(modelTmp, dialogAct, "lower expressive","distant","serious","formal","heartly");
+                            }
+                        }if (age <=40){
+                            addCharacteristics(modelTmp, dialogAct, "expressive","distant","serious","formal","heartly");
+                        }
+                    
+                    }if (proximity.equals("close")&&personality.equals("introverted")){
+                        addCharacteristics(modelTmp, dialogAct, "expressive","close","serious","formal","heartly");
                     }
                 }
                 

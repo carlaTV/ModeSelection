@@ -21,7 +21,7 @@ public class ModeSelectionTest {
     @Test
     public void testGreet() throws Exception {
 
-        String str = FileUtils.readFileToString(new File("src/test/resources/dm-output-greet.rdf"));    	
+        String str = FileUtils.readFileToString(new File("src/test/resources/lactoseAllergy.rdf"));    	
 
         UserProfileIni profile = new UserProfileIni(new File("src/test/resources/elder_german.ini"));
         
