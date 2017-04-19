@@ -121,7 +121,7 @@
     <j.0:containsSemantics rdf:resource="http://temp#59b264redi8qco87nmf1uj78om"/>
     <j.0:containsSemantics rdf:resource="http://temp#1cs4lf6amhllis6ctmesnua481"/>
     <j.0:containsSemantics rdf:resource="http://temp#jkb2e6msh75j9ccrrillk78mr3"/>
-    <rdf:type rdf:resource="http://kristina-project.eu/ontologies/dialogue_actions#Declare"/>
+    <rdf:type rdf:resource="http://kristina-project.eu/ontologies/dialogue_actions#PersonalGreet"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://temp#pdgbmftl9ugtsonnpru243qqng">
     <rdf:object rdf:resource="http://kristina-project.eu/ontologies/la/eatPork#eatDesc1"/>
