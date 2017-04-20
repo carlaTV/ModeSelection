@@ -90,7 +90,7 @@ public final class ModeSelection {
                 }
 
             }
-            if (daClass.equals("Thank")) { // create verbal owl DA
+            if (daClass.equals("Thank") | daClass.equals("AnswerThank")) { // create verbal owl DA
 
                 mode = Mode.VERBAL;
                 modelTmp = createVerbal(dialogAct, arousal, valence, counter);
@@ -148,7 +148,7 @@ public final class ModeSelection {
                     }
                 }
             }
-            if (daClass.equals("GoodBye")) { // create verbal owl DA
+            if (daClass.equals("GoodBye") | daClass.equals("SayGoodBye")) { // create verbal owl DA
                 mode = Mode.VERBAL;
                 modelTmp = createVerbal(dialogAct, arousal, valence, counter);
                 addFacialExpr(modelTmp, dialogAct, "friendly");
@@ -208,29 +208,41 @@ public final class ModeSelection {
                         addFacialIntensity(modelTmp, dialogAct, "low");
                     }
                 }
-
-                //WEATHER
-                Resource Weather = getResourceByClass(modelTmp, "Weather");
-                if (Weather != null) {
-                    System.out.println("This is the instance of the class weather: " + Weather.toString());
-                    Resource Cold = getResourceByClass(modelTmp, "cold");
-                    if (Cold != null) {
-                        addFacialExpr(modelTmp, SwabPockets, "smiley");
-                        addFacialIntensity(modelTmp, SwabPockets, "high");
-                    }
-                    Resource hot = getResourceByClass(modelTmp, "hot");
-                    if (hot != null) {
-                        addFacialExpr(modelTmp, SwabPockets, "smiley");
-                        addFacialIntensity(modelTmp, SwabPockets, "low");
-                    }
-                }
-
                 /*Resource falseTruthValueRes = getFalseTruthValueResource(modelTmp);
                 if (Pork != null | SwabPockets != null) {
                     System.out.println("This is the instance whose truth value is false: " + falseTruthValueRes.toString());
                     addYesNoFacialExpr(modelTmp, dialogAct, "apologetic");
                 }*/
             }
+            if (daClass.equals("ShowWeather")){
+                //WEATHER
+                Resource Cold = getResourceByClass(modelTmp, "cold");
+                if (Cold != null) {
+                    System.out.println("This is the instance of the class cold: " + Cold.toString());
+                    addFacialExpr(modelTmp, Cold, "neutral");
+                    //addFacialIntensity(modelTmp, Cold, "high");
+                }
+                Resource hot = getResourceByClass(modelTmp, "hot");
+                if (hot != null) {
+                    System.out.println("This is the instance of the class cold: " + Cold.toString());
+                    addFacialExpr(modelTmp, hot, "smiley");
+                    addFaceEnthusiasm(modelTmp, hot, "high");
+                }
+                
+            }
+            
+            if (daClass.equals("ReadNewspaper") | daClass.equals("ShowWebpage") ){
+                addFacialExpr(modelTmp, dialogAct, "default");
+            }
+            
+            if (daClass.equals("AskTask") | daClass.equals("AskTaskFollowUp")){
+                addFacialExpr(modelTmp, dialogAct, "smiley");
+            }
+            
+            if (daClass.equals("SimpleMotivate")){
+                addFacialExpr(modelTmp, dialogAct, "smiley");
+            }
+                        
             if (modelTmp != null && mode != null) {
                 addDA(modelTmp, mode, order);
             }
