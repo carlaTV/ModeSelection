@@ -214,24 +214,24 @@ public final class ModeSelection {
                     addYesNoFacialExpr(modelTmp, dialogAct, "apologetic");
                 }*/
             }
-            if (daClass.equals("ShowWeather")){
+            /*if (daClass.equals("ShowWeather")){
                 mode = Mode.VERBAL;
                 modelTmp = createVerbal(dialogAct, arousal, valence, counter);
                 //WEATHER
-                Resource Cold = getResourceByClass(modelTmp, "cold");
+                Resource Cold = getWeather(modelTmp, "cold");
                 if (Cold != null) {
                     System.out.println("This is the instance of the class cold: " + Cold.toString());
                     addFacialExpr(modelTmp, Cold, "neutral");
                     //addFacialIntensity(modelTmp, Cold, "high");
                 }
-                Resource hot = getResourceByClass(modelTmp, "hot");
+                Resource hot = getWeather(modelTmp, "hot");
                 if (hot != null) {
                     System.out.println("This is the instance of the class cold: " + Cold.toString());
                     addFacialExpr(modelTmp, hot, "smiley");
                     addFaceEnthusiasm(modelTmp, hot, "high");
                 }
                 
-            }
+            }*/
             
             if (daClass.equals("ReadNewspaper") | daClass.equals("ShowWebpage") ){
                 mode = Mode.VERBAL;
@@ -375,6 +375,22 @@ public final class ModeSelection {
         return insObj;
 
     }
+    
+    /*public Resource getWeather(Model model, String className) {
+
+        Resource insObj = null;
+        RSIterator iter = model.listReifiedStatements();
+        while (iter.hasNext()) {
+            ReifiedStatement stmt = iter.nextRS();
+            if (stmt.getStatement().getObject().toString().equals(ontoIRI + "#weatherClassification&gt;&#xD;\n" +
+            "\\\"" + className)) {
+                insObj = stmt.getStatement().getSubject();
+            }
+        }
+
+        return insObj;
+
+    }*/
 
     public Resource getFalseTruthValueResource(Model model) {
 

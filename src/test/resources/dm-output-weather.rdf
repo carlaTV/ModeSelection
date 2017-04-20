@@ -1,0 +1,41 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:j.0="http://kristina-project.eu/ontologies/dialogue_actions#" > 
+  <rdf:Description rdf:about="http://kristina-project.eu/tmp#5189c61d-8434-48b4-98c3-266366864002">
+    <j.0:text>@prefix xsd:     &lt;http://www.w3.org/2001/XMLSchema#&gt; .&#xD;
+@prefix rdfs:    &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .&#xD;
+@prefix owl:     &lt;http://www.w3.org/2002/07/owl#&gt; .&#xD;
+@prefix rdf:     &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .&#xD;
+&#xD;
+&lt;http://temp#a3o1tmipa6lnbh7tinaf7fohmt&gt;&#xD;
+      a       &lt;http://kristina-project.eu/ontologies/weather#Forecast&gt; ;&#xD;
+      &lt;http://kristina-project.eu/ontologies/weather#humidity&gt;&#xD;
+              \"66\"^^xsd:double ;&#xD;
+      &lt;http://kristina-project.eu/ontologies/weather#pressure&gt;&#xD;
+              \"730\"^^xsd:double ;&#xD;
+      &lt;http://kristina-project.eu/ontologies/weather#skyCondition&gt;&#xD;
+              \"fineSkyConditionRating\"^^xsd:string ;&#xD;
+      &lt;http://kristina-project.eu/ontologies/weather#temperature&gt;&#xD;
+              \"6\"^^xsd:double ;&#xD;
+      &lt;http://kristina-project.eu/ontologies/weather#windDirection&gt;&#xD;
+              \"NEWindDirectionRating\"^^xsd:string ;&#xD;			  
+      &lt;http://kristina-project.eu/ontologies/weather#weatherClassification&gt;&#xD;
+              \"cold\"^^xsd:string ;&#xD;			  
+      &lt;http://kristina-project.eu/ontologies/weather#windSpeed&gt;&#xD;
+              \"18.0\"^^xsd:double .&#xD;
+&#xD;
+&lt;http://response-data&gt;&#xD;
+      a       owl:Ontology ;&#xD;
+      owl:imports &lt;http://kristina-project.eu/ontologies/weather&gt; .&#xD;
+</j.0:text>
+    <rdf:type rdf:resource="http://kristina-project.eu/ontologies/dialogue_actions#ShowWeather"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://kristina-project.eu/tmp#699d65f2-f75f-49ed-8ea4-894e0beac15b">
+    <j.0:startWith rdf:resource="http://kristina-project.eu/tmp#5189c61d-8434-48b4-98c3-266366864002"/>
+    <j.0:containsSystemAct rdf:resource="http://kristina-project.eu/tmp#5189c61d-8434-48b4-98c3-266366864002"/>
+    <j.0:hasArousal rdf:datatype="http://www.w3.org/2001/XMLSchema#double">0.17455002531886618</j.0:hasArousal>
+    <j.0:hasValence rdf:datatype="http://www.w3.org/2001/XMLSchema#double">0.12004061015366468</j.0:hasValence>
+    <rdf:type rdf:resource="http://kristina-project.eu/ontologies/dialogue_actions#SystemAction"/>
+  </rdf:Description>
+</rdf:RDF>
+
