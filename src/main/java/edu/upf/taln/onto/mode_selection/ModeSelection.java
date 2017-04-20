@@ -178,7 +178,7 @@ public final class ModeSelection {
                 }
 
             }
-            if (daClass.equals("Declare") | daClass.equals("Statement")) {
+            if (daClass.equals("Declare")) {
                 mode = Mode.VERBAL;
                 modelTmp = createVerbal(dialogAct, arousal, valence, counter);
 
@@ -215,6 +215,8 @@ public final class ModeSelection {
                 }*/
             }
             if (daClass.equals("ShowWeather")){
+                mode = Mode.VERBAL;
+                modelTmp = createVerbal(dialogAct, arousal, valence, counter);
                 //WEATHER
                 Resource Cold = getResourceByClass(modelTmp, "cold");
                 if (Cold != null) {
@@ -232,14 +234,20 @@ public final class ModeSelection {
             }
             
             if (daClass.equals("ReadNewspaper") | daClass.equals("ShowWebpage") ){
+                mode = Mode.VERBAL;
+                modelTmp = createVerbal(dialogAct, arousal, valence, counter);
                 addFacialExpr(modelTmp, dialogAct, "default");
             }
             
             if (daClass.equals("AskTask") | daClass.equals("AskTaskFollowUp")){
+                mode = Mode.VERBAL;
+                modelTmp = createVerbal(dialogAct, arousal, valence, counter);
                 addFacialExpr(modelTmp, dialogAct, "smiley");
             }
             
             if (daClass.equals("SimpleMotivate")){
+                mode = Mode.VERBAL;
+                modelTmp = createVerbal(dialogAct, arousal, valence, counter);
                 addFacialExpr(modelTmp, dialogAct, "smiley");
             }
                         
