@@ -124,7 +124,7 @@ public final class ModeSelection {
 
                 mode = Mode.VERBAL;
                 modelTmp = createVerbal(dialogAct, arousal, valence, counter);
-                addFacialExpr(modelTmp, dialogAct, "apologetic");
+                addFacialIntention(modelTmp, dialogAct, "apologetic");
                 if (gender.equals("female") | gender.equals("male")) { //elder people
 
                     if (proximity.equals("distant") && personality.equals("introverted")) {
@@ -186,14 +186,14 @@ public final class ModeSelection {
                 Resource Pork = getResourceByClass(modelTmp, "Pork");
                 if (Pork != null) {
                     System.out.println("This is the instance of the class pork: " + Pork.toString());
-                    addFacialExpr(modelTmp, Pork, "apologetic");
+                    addFacialIntention(modelTmp, Pork, "apologetic");
                 }
 
                 //ALLERGY
                 Resource Allergy = getResourceByClass(modelTmp, "Allergy");
                 if (Allergy != null) {
                     System.out.println("This is the instance of the class Allergy: " + Allergy.toString());
-                    addFacialExpr(modelTmp, Allergy, "worried");
+                    addFacialIntention(modelTmp, Allergy, "worried");
                 }
 
                 //Swabian pokets
@@ -404,6 +404,13 @@ public final class ModeSelection {
         Property FacialExpression = modelTmp.getProperty(modeSelectionIRI + "#" + "FacialExpression");
         Literal faceLiteral = modelTmp.createLiteral(facialExpr);
         modelTmp.addLiteral(dialogAct, FacialExpression, faceLiteral);
+    }
+    
+    public void addFacialIntention(Model modelTmp, Resource dialogAct, String facialInt) {
+        //TARGETED WORD
+        Property facialIntention = modelTmp.getProperty(modeSelectionIRI + "#" + "facialIntention");
+        Literal intentionLiteral = modelTmp.createLiteral(facialInt);
+        modelTmp.addLiteral(dialogAct, facialIntention, intentionLiteral);
     }
 
     public void addFacialIntensity(Model modelTmp, Resource dialogAct, String intensity) {
