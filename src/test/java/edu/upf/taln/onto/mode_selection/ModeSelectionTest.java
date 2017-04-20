@@ -21,7 +21,7 @@ public class ModeSelectionTest {
     @Test
     public void testGreet() throws Exception {
 
-        String str = FileUtils.readFileToString(new File("src/test/resources/eatPork.rdf"));    	
+        String str = FileUtils.readFileToString(new File("src/test/resources/dm-putput-greet.rdf"));    	
 
         UserProfileIni profile = new UserProfileIni(new File("src/test/resources/young_german.ini"));
         
@@ -49,9 +49,63 @@ public class ModeSelectionTest {
     @Test
     public void testPork() throws Exception {
 
-    	String str = FileUtils.readFileToString(new File("src/test/resources/eatPork.rdf"));
+    	String str = FileUtils.readFileToString(new File("src/test/resources/notEatPork.rdf"));
 
         UserProfileIni profile = new UserProfileIni(new File("src/test/resources/user_profile.ini"));
+        
+        ModeSelection mdParser = new ModeSelection(str, profile);
+
+        Set<Integer> keys;
+        Map<Integer, String> tmp;
+
+        System.out.println("---------------- nonVerbal: ");
+        tmp = mdParser.getNonVerbalDialogueElements();
+        keys = tmp.keySet();
+        for (Integer key : keys) {
+            System.out.println(key + " " + tmp.get(key));
+        }
+
+        System.out.println("----------------- verbal: ");
+        tmp = mdParser.getVerbalDialogueElements();
+        keys = tmp.keySet();
+        for (Integer key : keys) {
+            System.out.println(key + " " + tmp.get(key));            
+        }
+    }
+    
+    @Test
+    public void testAllergy() throws Exception {
+
+    	String str = FileUtils.readFileToString(new File("src/test/resources/lactoseAllergy.rdf"));
+
+        UserProfileIni profile = new UserProfileIni(new File("src/test/resources/user_profile.ini"));
+        
+        ModeSelection mdParser = new ModeSelection(str, profile);
+
+        Set<Integer> keys;
+        Map<Integer, String> tmp;
+
+        System.out.println("---------------- nonVerbal: ");
+        tmp = mdParser.getNonVerbalDialogueElements();
+        keys = tmp.keySet();
+        for (Integer key : keys) {
+            System.out.println(key + " " + tmp.get(key));
+        }
+
+        System.out.println("----------------- verbal: ");
+        tmp = mdParser.getVerbalDialogueElements();
+        keys = tmp.keySet();
+        for (Integer key : keys) {
+            System.out.println(key + " " + tmp.get(key));            
+        }
+    }
+    
+    @Test
+    public void testPockets() throws Exception {
+
+    	String str = FileUtils.readFileToString(new File("src/test/resources/likeSwabianPockets.rdf"));
+
+        UserProfileIni profile = new UserProfileIni(new File("src/test/resources/young_german.ini"));
         
         ModeSelection mdParser = new ModeSelection(str, profile);
 

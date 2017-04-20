@@ -28,18 +28,18 @@ public final class ModeSelection {
     };
 
     public ModeSelection(String dmOutputOWL, UserProfileIni profile) throws CustomException, UnsupportedEncodingException {
-        
+
         SystemAction sa = new SystemAction(dmOutputOWL);
-        
+
         processResponses(sa, profile);
     }
 
-private void processResponses(SystemAction systemAction, UserProfileIni profile) throws CustomException {
-        
+    private void processResponses(SystemAction systemAction, UserProfileIni profile) throws CustomException {
+
         float valence = systemAction.getValence();
         float arousal = systemAction.getArousal();
         List<Resource> dialogActs = systemAction.getDialogActs();
-        
+
         //identity
         String gender = profile.getGender();
         int age = profile.getAge();
@@ -48,210 +48,210 @@ private void processResponses(SystemAction systemAction, UserProfileIni profile)
         //personality
         String proximity = profile.getProximity();
         String personality = profile.getPersonality();
-        
-		// process the read DAs in order to assign them to verbal vs non-verbal output and add respective mode-selection tags		
-        for (int order=0; order < dialogActs.size(); order++) {
+
+        // process the read DAs in order to assign them to verbal vs non-verbal output and add respective mode-selection tags		
+        for (int order = 0; order < dialogActs.size(); order++) {
 
             Resource dialogAct = dialogActs.get(order);
-            
+
             String daClass = systemAction.getClass(dialogAct); // get the type of the DA instance
             System.out.println(order + " DA is " + daClass);
-           
+
             Mode mode = null;
             Model modelTmp = null;
-            
-            
-            
-            if (daClass.equals("PersonalGreet")| daClass.equals("Greeting")){ // create verbal owl DA
+
+            if (daClass.equals("PersonalGreet") | daClass.equals("Greeting")) { // create verbal owl DA
                 mode = Mode.VERBAL;
                 modelTmp = createVerbal(dialogAct, arousal, valence, counter);
                 addFacialExpr(modelTmp, dialogAct, "friendly");
-                if (gender.equals("female")| gender.equals("male")&& age >= 70){ //elder people
-                    if (country.equals("es")){
-                        if (proximity.equals("close") && personality.equals("extroverted")){
-                            addCharacteristics(modelTmp, dialogAct, "very expressive","close","joyful","informal","colloquial");
+                if (gender.equals("female") | gender.equals("male") && age >= 70) { //elder people
+                    if (country.equals("es")) {
+                        if (proximity.equals("close") && personality.equals("extroverted")) {
+                            addCharacteristics(modelTmp, dialogAct, "very expressive", "close", "joyful", "informal", "colloquial");
                         }
                     }
-                    if (country.equals("ge")){
-                        if(proximity.equals("distant")&&personality.equals("introverted")){
-                            addCharacteristics(modelTmp, dialogAct, "expressive","medium close","neutral","formal","reserved");  
-                        }
-                    }
-                }if (gender.equals("male") | gender.equals("female") && age <= 40){
-                    if (country.equals("es")){
-                        if (proximity.equals("close") && personality.equals("extroverted")){
-                            addCharacteristics(modelTmp, dialogAct, "expressive","close","joyful","informal","colloquial");   
-                        }
-                    }if (country.equals("ge")){
-                        if (proximity.equals("distant") && personality.equals("introverted")){
-                            addCharacteristics(modelTmp, dialogAct, "expressive","medium close","joyful","formal","heartly");
+                    if (country.equals("ge")) {
+                        if (proximity.equals("distant") && personality.equals("introverted")) {
+                            addCharacteristics(modelTmp, dialogAct, "expressive", "medium close", "neutral", "formal", "reserved");
                         }
                     }
                 }
-                
+                if (gender.equals("male") | gender.equals("female") && age <= 40) {
+                    if (country.equals("es")) {
+                        if (proximity.equals("close") && personality.equals("extroverted")) {
+                            addCharacteristics(modelTmp, dialogAct, "expressive", "close", "joyful", "informal", "colloquial");
+                        }
+                    }
+                    if (country.equals("ge")) {
+                        if (proximity.equals("distant") && personality.equals("introverted")) {
+                            addCharacteristics(modelTmp, dialogAct, "expressive", "medium close", "joyful", "formal", "heartly");
+                        }
+                    }
+                }
 
-            }if (daClass.equals("Thank")){ // create verbal owl DA
-                
+            }
+            if (daClass.equals("Thank")) { // create verbal owl DA
+
                 mode = Mode.VERBAL;
                 modelTmp = createVerbal(dialogAct, arousal, valence, counter);
                 addFacialExpr(modelTmp, dialogAct, "friendly");
 
-                if (gender.equals("female")| gender.equals("male")){ //elder people
-                    
-                    if (country.equals("es")){
-                        if (proximity.equals("close") && personality.equals("extroverted")){
-                            if (age >= 70){ //spanish elderly
-                            addCharacteristics(modelTmp, dialogAct, "expressive","close","thankful","formal","heartly");
-                        }
-                            if (age <= 40){ //spanish young
-                                addCharacteristics(modelTmp, dialogAct, "expressive","close","thankful","informal","heartly");
-                            }   
+                if (gender.equals("female") | gender.equals("male")) { //elder people
+
+                    if (country.equals("es")) {
+                        if (proximity.equals("close") && personality.equals("extroverted")) {
+                            if (age >= 70) { //spanish elderly
+                                addCharacteristics(modelTmp, dialogAct, "expressive", "close", "thankful", "formal", "heartly");
+                            }
+                            if (age <= 40) { //spanish young
+                                addCharacteristics(modelTmp, dialogAct, "expressive", "close", "thankful", "informal", "heartly");
+                            }
                         }
                     }
-                    if (country.equals("ge")){
-                        if (proximity.equals("distant") && personality.equals("introverted")){
-                            if (age >= 70){ //spanish elderly
-                            addCharacteristics(modelTmp, dialogAct, "expressive","distant","thankful","formal","heartly");
+                    if (country.equals("ge")) {
+                        if (proximity.equals("distant") && personality.equals("introverted")) {
+                            if (age >= 70) { //spanish elderly
+                                addCharacteristics(modelTmp, dialogAct, "expressive", "distant", "thankful", "formal", "heartly");
                             }
-                            if (age <= 40){ //spanish young
-                                addCharacteristics(modelTmp, dialogAct, "expressive","distant","thankful","formal","heartly");
+                            if (age <= 40) { //spanish young
+                                addCharacteristics(modelTmp, dialogAct, "expressive", "distant", "thankful", "formal", "heartly");
                             }
-                        }   
+                        }
                     }
                 }
-            }if (daClass.equals("Apologise")){ // create verbal owl DA
-                
+            }
+            if (daClass.equals("Apologise")) { // create verbal owl DA
+
                 mode = Mode.VERBAL;
                 modelTmp = createVerbal(dialogAct, arousal, valence, counter);
                 addFacialExpr(modelTmp, dialogAct, "apologetic");
-                if (gender.equals("female")| gender.equals("male")){ //elder people
-                    
-                    if (proximity.equals("distant") && personality.equals("introverted")){
-                        if ( age >= 70){
-                            if (country.equals("es")){
+                if (gender.equals("female") | gender.equals("male")) { //elder people
 
-                                addCharacteristics(modelTmp, dialogAct, "expressive","close","serious","formal","heartly");
-                            }
-                            if (country.equals("ge")){
+                    if (proximity.equals("distant") && personality.equals("introverted")) {
+                        if (age >= 70) {
+                            if (country.equals("es")) {
 
-                                addCharacteristics(modelTmp, dialogAct, "lower expressive","distant","serious","formal","heartly");
+                                addCharacteristics(modelTmp, dialogAct, "expressive", "close", "serious", "formal", "heartly");
                             }
-                        }if (age <=40){
-                            addCharacteristics(modelTmp, dialogAct, "expressive","distant","serious","formal","heartly");
+                            if (country.equals("ge")) {
+
+                                addCharacteristics(modelTmp, dialogAct, "lower expressive", "distant", "serious", "formal", "heartly");
+                            }
                         }
-                    
-                    }if (proximity.equals("close")&&personality.equals("introverted")){
-                        addCharacteristics(modelTmp, dialogAct, "expressive","close","serious","formal","heartly");
+                        if (age <= 40) {
+                            addCharacteristics(modelTmp, dialogAct, "expressive", "distant", "serious", "formal", "heartly");
+                        }
+
                     }
-                }                              
-            }if (daClass.equals("GoodBye")){ // create verbal owl DA
-                
+                    if (proximity.equals("close") && personality.equals("introverted")) {
+                        addCharacteristics(modelTmp, dialogAct, "expressive", "close", "serious", "formal", "heartly");
+                    }
+                }
+            }
+            if (daClass.equals("GoodBye")) { // create verbal owl DA
                 mode = Mode.VERBAL;
                 modelTmp = createVerbal(dialogAct, arousal, valence, counter);
                 addFacialExpr(modelTmp, dialogAct, "friendly");
-                if (gender.equals("female")| gender.equals("male")){ //elder people
-                    if (country.equals("es")){
-                        if (proximity.equals("close") && personality.equals("extroverted")){
-                           if ( age >= 70){
-                            addCharacteristics(modelTmp, dialogAct, "expressive ","close","joyful","formal","heartly");
-                    
-                            }if (age <=40){
-                                addCharacteristics(modelTmp, dialogAct, "expressive","close","joyful","informal","colloquial");
-                            } 
+                if (gender.equals("female") | gender.equals("male")) { //elder people
+                    if (country.equals("es")) {
+                        if (proximity.equals("close") && personality.equals("extroverted")) {
+                            if (age >= 70) {
+                                addCharacteristics(modelTmp, dialogAct, "expressive ", "close", "joyful", "formal", "heartly");
+
+                            }
+                            if (age <= 40) {
+                                addCharacteristics(modelTmp, dialogAct, "expressive", "close", "joyful", "informal", "colloquial");
+                            }
                         }
-                    }if (country.equals("ge")){
-                        if (personality.equals("introverted")){
-                            if ( proximity.equals("distant") && age >= 70){
-                            addCharacteristics(modelTmp, dialogAct, "expressive","distant","joyful","formal","reserved");
-                    
-                            }if (proximity.equals("close") && age <=40){
-                                addCharacteristics(modelTmp, dialogAct, "expressive","close","joyful","formal","reserved");
-                            }   
+                    }
+                    if (country.equals("ge")) {
+                        if (personality.equals("introverted")) {
+                            if (proximity.equals("distant") && age >= 70) {
+                                addCharacteristics(modelTmp, dialogAct, "expressive", "distant", "joyful", "formal", "reserved");
+
+                            }
+                            if (proximity.equals("close") && age <= 40) {
+                                addCharacteristics(modelTmp, dialogAct, "expressive", "close", "joyful", "formal", "reserved");
+                            }
                         }
-                        
                     }
-                    }
-                                                 
-            }if (daClass.equals("Declare")){
-                // check if an instance of the class Pork is contained in the input owl
+                }
+
+            }
+            if (daClass.equals("Declare") | daClass.equals("Statement")) {
                 mode = Mode.VERBAL;
                 modelTmp = createVerbal(dialogAct, arousal, valence, counter);
-                
+
                 //PORK
                 Resource Pork = getResourceByClass(modelTmp, "Pork");
                 if (Pork != null) {
-                    System.out.println("This is the instance of the class pork: "+Pork.toString());
-                    addFacialExpr(modelTmp, dialogAct, "apologetic");
-                    // depending on what you have discussed with Leo, the respective annotation property could be added 
-                    // either at the DA level: modelTmp.addLiteral(dialogAct, hasX, xLiteral);
-                    // or at the instance level of this class: modelTmp.addLiteral(classInsRes, hasX, xLiteral);
+                    System.out.println("This is the instance of the class pork: " + Pork.toString());
+                    addFacialExpr(modelTmp, Pork, "apologetic");
                 }
-                
+
+                //ALLERGY
+                Resource Allergy = getResourceByClass(modelTmp, "Allergy");
+                if (Allergy != null) {
+                    System.out.println("This is the instance of the class Allergy: " + Allergy.toString());
+                    addFacialExpr(modelTmp, Allergy, "worried");
+                }
+
                 //Swabian pokets
-                Resource SwabPockets = getResourceByClass(modelTmp, "Swabian Pockets");
+                Resource SwabPockets = getResourceByClass(modelTmp, "SwabianPockets");
                 if (SwabPockets != null) {
-                    System.out.println("This is the instance of the class pork: "+SwabPockets.toString());
-                    if (country.equals("ge")){
+                    System.out.println("This is the instance of the class Swabian Pockets: " + SwabPockets.toString());
+                    if (country.equals("ge")) {
                         addFacialExpr(modelTmp, dialogAct, "smiley");
                         addFacialIntensity(modelTmp, dialogAct, "high");
-                    }else{
+                    } else {
                         addFacialExpr(modelTmp, dialogAct, "smiley");
                         addFacialIntensity(modelTmp, dialogAct, "low");
                     }
-                    
-                    // depending on what you have discussed with Leo, the respective annotation property could be added 
-                    // either at the DA level: modelTmp.addLiteral(dialogAct, hasX, xLiteral);
-                    // or at the instance level of this class: modelTmp.addLiteral(classInsRes, hasX, xLiteral);
                 }
-                
+
                 //WEATHER
-                /*Resource Weather = getResourceByClass(modelTmp, "Weather");
+                Resource Weather = getResourceByClass(modelTmp, "Weather");
                 if (Weather != null) {
-                    System.out.println("This is the instance of the class weather: "+Weather.toString());
-                    if (){
+                    System.out.println("This is the instance of the class weather: " + Weather.toString());
+                    Resource Cold = getResourceByClass(modelTmp, "cold");
+                    if (Cold != null) {
                         addFacialExpr(modelTmp, SwabPockets, "smiley");
                         addFacialIntensity(modelTmp, SwabPockets, "high");
-                    }else{
+                    }
+                    Resource hot = getResourceByClass(modelTmp, "hot");
+                    if (hot != null) {
                         addFacialExpr(modelTmp, SwabPockets, "smiley");
                         addFacialIntensity(modelTmp, SwabPockets, "low");
                     }
-                    
-                    // depending on what you have discussed with Leo, the respective annotation property could be added 
-                    // either at the DA level: modelTmp.addLiteral(dialogAct, hasX, xLiteral);
-                    // or at the instance level of this class: modelTmp.addLiteral(classInsRes, hasX, xLiteral);
-                }*/
-
-                Resource falseTruthValueRes = getFalseTruthValueResource(modelTmp);
-                if (Pork != null | SwabPockets != null) {
-                    System.out.println("This is the instance whose truth value is false: "+falseTruthValueRes.toString());
-                    addYesNoFacialExpr(modelTmp,dialogAct,"apologetic" );
-                    // depending on what you have discussed with Leo, the respective annotation property could be added 
-                    // either at the DA level: modelTmp.addLiteral(dialogAct, hasY, yLiteral);
-                    // or at the instance level of this class: modelTmp.addLiteral(classInsRes, hasY, yLiteral);
                 }
+
+                /*Resource falseTruthValueRes = getFalseTruthValueResource(modelTmp);
+                if (Pork != null | SwabPockets != null) {
+                    System.out.println("This is the instance whose truth value is false: " + falseTruthValueRes.toString());
+                    addYesNoFacialExpr(modelTmp, dialogAct, "apologetic");
+                }*/
             }
             if (modelTmp != null && mode != null) {
-               addDA(modelTmp, mode, order);
+                addDA(modelTmp, mode, order);
             }
-            
+
         }
-        
-        
+
     }
- 
+
     public void addDA(Model model, Mode mode, Integer order) {
-        
+
         ByteArrayOutputStream nonVerbalStream = new ByteArrayOutputStream();
         model.write(nonVerbalStream, "RDF/XML");
         String owlStr = nonVerbalStream.toString();
-        
+
         if (mode == Mode.NON_VERBAL) {
             nonVerbalDialogueElements.put(order, owlStr);
         } else { // 
             verbalDialogueElements.put(order, owlStr);
         }
         model.close();
-        
+
     }
 
     private Model createNonVerbal(int order, float arousal, float valence, String responseCls, int counter) {
@@ -275,8 +275,7 @@ private void processResponses(SystemAction systemAction, UserProfileIni profile)
 
         Property hasExpressivity = modelTmp.getProperty(modeSelectionIRI + "#" + "hasExpressivity");
         Literal expLiteral = modelTmp.createLiteral("very expressive");
-        daRes.addLiteral(hasExpressivity, expLiteral);    
-
+        daRes.addLiteral(hasExpressivity, expLiteral);
 
         return modelTmp;
     }
@@ -320,15 +319,12 @@ private void processResponses(SystemAction systemAction, UserProfileIni profile)
         Property hasExpressivity = modelTmp.getProperty(modeSelectionIRI + "#" + "hasExpressivity");
         Literal expLiteral = modelTmp.createLiteral("very expressive");
         da.addLiteral(hasExpressivity, expLiteral);
-        */
-       
+         */
+
         return modelTmp;
-        
-       
-        
 
     }
-    
+
     public String decode(String str) throws UnsupportedEncodingException {
         return URLDecoder.decode(str, "UTF-8");
     }
@@ -345,80 +341,84 @@ private void processResponses(SystemAction systemAction, UserProfileIni profile)
         return uri.substring(uri.lastIndexOf('#') + 1);
     }
 
-    
     public Resource getResourceByClass(Model model, String className) {
-    	
-    	Resource insObj=null;
-    	RSIterator iter = model.listReifiedStatements();    	    	
-    	while (iter.hasNext()){		
-    		ReifiedStatement stmt = iter.nextRS();
-    		if (stmt.getStatement().getObject().toString().equals(ontoIRI + "#" + className))
-    			insObj = stmt.getStatement().getSubject();
-    	}
-        	
+
+        Resource insObj = null;
+        RSIterator iter = model.listReifiedStatements();
+        while (iter.hasNext()) {
+            ReifiedStatement stmt = iter.nextRS();
+            if (stmt.getStatement().getObject().toString().equals(ontoIRI + "#" + className)) {
+                insObj = stmt.getStatement().getSubject();
+            }
+        }
+
         return insObj;
-        
+
     }
-    
+
     public Resource getFalseTruthValueResource(Model model) {
-    	
-    	Resource insObj=null;
-    	RSIterator iter = model.listReifiedStatements();    	    	
-    	while (iter.hasNext()){		
-    		ReifiedStatement stmt = iter.nextRS();
-    		if (stmt.getStatement().getPredicate().toString().equals(contextIRI + "#" + "hasTruthValue"))
-    			insObj = stmt.getStatement().getSubject();
-    	}
-        	
+
+        Resource insObj = null;
+        RSIterator iter = model.listReifiedStatements();
+        while (iter.hasNext()) {
+            ReifiedStatement stmt = iter.nextRS();
+            if (stmt.getStatement().getPredicate().toString().equals(contextIRI + "#" + "hasTruthValue")) {
+                insObj = stmt.getStatement().getSubject();
+            }
+        }
+
         return insObj;
-        
+
     }
-    
-    public void addCharacteristics(Model modelTmp, Resource dialogAct, String expressivity, String proximity, String attitude, String style, String social){
 
-    //EXPRESSIVITY
-    Property hasExpressivity = modelTmp.getProperty(modeSelectionIRI + "#" + "hasExpressivity");
-    Literal expLiteral = modelTmp.createLiteral(expressivity);
-    modelTmp.addLiteral(dialogAct, hasExpressivity, expLiteral);
+    public void addCharacteristics(Model modelTmp, Resource dialogAct, String expressivity, String proximity, String attitude, String style, String social) {
 
-    //PROXIMITY
-    Property hasProximity = modelTmp.getProperty(modeSelectionIRI + "#" + "hasProximity");
-    Literal proxLiteral = modelTmp.createLiteral(proximity);
-    modelTmp.addLiteral(dialogAct, hasProximity, proxLiteral);
+        //EXPRESSIVITY
+        Property hasExpressivity = modelTmp.getProperty(modeSelectionIRI + "#" + "hasExpressivity");
+        Literal expLiteral = modelTmp.createLiteral(expressivity);
+        modelTmp.addLiteral(dialogAct, hasExpressivity, expLiteral);
 
-    //ATTITUDE
-    Property hasAttitude = modelTmp.getProperty(modeSelectionIRI + "#" + "hasAttitude");
-    Literal attiLiteral = modelTmp.createLiteral(attitude);
-    modelTmp.addLiteral(dialogAct, hasAttitude, attiLiteral);
+        //PROXIMITY
+        Property hasProximity = modelTmp.getProperty(modeSelectionIRI + "#" + "hasProximity");
+        Literal proxLiteral = modelTmp.createLiteral(proximity);
+        modelTmp.addLiteral(dialogAct, hasProximity, proxLiteral);
 
-    //STYLE
-    Property hasStyle = modelTmp.getProperty(modeSelectionIRI + "#" + "hasStyle");
-    Literal styleLiteral = modelTmp.createLiteral(style);
-    modelTmp.addLiteral(dialogAct, hasStyle, styleLiteral);
+        //ATTITUDE
+        Property hasAttitude = modelTmp.getProperty(modeSelectionIRI + "#" + "hasAttitude");
+        Literal attiLiteral = modelTmp.createLiteral(attitude);
+        modelTmp.addLiteral(dialogAct, hasAttitude, attiLiteral);
 
-    //SOCIAL
-    Property hasSocial = modelTmp.getProperty(modeSelectionIRI + "#" + "hasSocial");
-    Literal socLiteral = modelTmp.createLiteral(social);
-    modelTmp.addLiteral(dialogAct, hasSocial, socLiteral);
+        //STYLE
+        Property hasStyle = modelTmp.getProperty(modeSelectionIRI + "#" + "hasStyle");
+        Literal styleLiteral = modelTmp.createLiteral(style);
+        modelTmp.addLiteral(dialogAct, hasStyle, styleLiteral);
+
+        //SOCIAL
+        Property hasSocial = modelTmp.getProperty(modeSelectionIRI + "#" + "hasSocial");
+        Literal socLiteral = modelTmp.createLiteral(social);
+        modelTmp.addLiteral(dialogAct, hasSocial, socLiteral);
     }
-    public void addFacialExpr(Model modelTmp, Resource dialogAct, String facialExpr){
+
+    public void addFacialExpr(Model modelTmp, Resource dialogAct, String facialExpr) {
         //TARGETED WORD
         Property FacialExpression = modelTmp.getProperty(modeSelectionIRI + "#" + "FacialExpression");
         Literal faceLiteral = modelTmp.createLiteral(facialExpr);
-        modelTmp.addLiteral(dialogAct, FacialExpression, faceLiteral);    
+        modelTmp.addLiteral(dialogAct, FacialExpression, faceLiteral);
     }
-    public void addFacialIntensity (Model modelTmp, Resource dialogAct, String intensity){
+
+    public void addFacialIntensity(Model modelTmp, Resource dialogAct, String intensity) {
         Property FacIntensity = modelTmp.getProperty(modeSelectionIRI + "#" + "FacialIntensity");
         Literal intensLiteral = modelTmp.createLiteral(intensity);
         modelTmp.addLiteral(dialogAct, FacIntensity, intensLiteral);
     }
-    public void addFaceEnthusiasm (Model modelTmp, Resource dialogAct, String enthusiasm){
+
+    public void addFaceEnthusiasm(Model modelTmp, Resource dialogAct, String enthusiasm) {
         Property FacEnthusiasm = modelTmp.getProperty(modeSelectionIRI + "#" + "FacialEnthusiasm");
         Literal enthLiteral = modelTmp.createLiteral(enthusiasm);
         modelTmp.addLiteral(dialogAct, FacEnthusiasm, enthLiteral);
     }
-    
-    public void addYesNoFacialExpr(Model modelTmp, Resource dialogAct, String facialExpr){
+
+    public void addYesNoFacialExpr(Model modelTmp, Resource dialogAct, String facialExpr) {
         //YES OR NO
         Property FacialExpression = modelTmp.getProperty(modeSelectionIRI + "#" + "FacialExpression");
         Literal faceLiteral = modelTmp.createLiteral(facialExpr);
