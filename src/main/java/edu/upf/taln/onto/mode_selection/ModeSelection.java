@@ -98,22 +98,25 @@ private void processResponses(SystemAction systemAction, UserProfileIni profile)
 
                 if (gender.equals("female")| gender.equals("male")){ //elder people
                     
-                    if (proximity.equals("close") && personality.equals("extroverted") && country.equals("es")){
-                            
-                        if (age >= 70){ //spanish elderly
+                    if (country.equals("es")){
+                        if (proximity.equals("close") && personality.equals("extroverted")){
+                            if (age >= 70){ //spanish elderly
                             addCharacteristics(modelTmp, dialogAct, "expressive","close","thankful","formal","heartly");
                         }
-                        if (age <= 40){ //spanish young
-                            addCharacteristics(modelTmp, dialogAct, "expressive","close","thankful","informal","heartly");
+                            if (age <= 40){ //spanish young
+                                addCharacteristics(modelTmp, dialogAct, "expressive","close","thankful","informal","heartly");
+                            }   
                         }
                     }
-                    if (proximity.equals("distant") && personality.equals("introverted") && country.equals("ge")){
-                        if (age >= 70){ //spanish elderly
+                    if (country.equals("ge")){
+                        if (proximity.equals("distant") && personality.equals("introverted")){
+                            if (age >= 70){ //spanish elderly
                             addCharacteristics(modelTmp, dialogAct, "expressive","distant","thankful","formal","heartly");
-                        }
-                        if (age <= 40){ //spanish young
-                            addCharacteristics(modelTmp, dialogAct, "expressive","distant","thankful","formal","heartly");
-                        }
+                            }
+                            if (age <= 40){ //spanish young
+                                addCharacteristics(modelTmp, dialogAct, "expressive","distant","thankful","formal","heartly");
+                            }
+                        }   
                     }
                 }
             }if (daClass.equals("Apologise")){ // create verbal owl DA
@@ -147,21 +150,25 @@ private void processResponses(SystemAction systemAction, UserProfileIni profile)
                 modelTmp = createVerbal(dialogAct, arousal, valence, counter);
                 addFacialExpr(modelTmp, dialogAct, "friendly");
                 if (gender.equals("female")| gender.equals("male")){ //elder people
-                    if (proximity.equals("close") && personality.equals("extroverted")&& country.equals("es")){
-                        if ( age >= 70){
+                    if (country.equals("es")){
+                        if (proximity.equals("close") && personality.equals("extroverted")){
+                           if ( age >= 70){
                             addCharacteristics(modelTmp, dialogAct, "expressive ","close","joyful","formal","heartly");
                     
-                        }if (age <=40){
-                            addCharacteristics(modelTmp, dialogAct, "expressive","close","joyful","informal","colloquial");
+                            }if (age <=40){
+                                addCharacteristics(modelTmp, dialogAct, "expressive","close","joyful","informal","colloquial");
+                            } 
                         }
-                    
-                    }if (personality.equals("introverted")&& country.equals("ge")){
-                        if ( proximity.equals("distant") && age >= 70){
+                    }if (country.equals("ge")){
+                        if (personality.equals("introverted")){
+                            if ( proximity.equals("distant") && age >= 70){
                             addCharacteristics(modelTmp, dialogAct, "expressive","distant","joyful","formal","reserved");
                     
-                        }if (proximity.equals("close") && age <=40){
-                            addCharacteristics(modelTmp, dialogAct, "expressive","close","joyful","formal","reserved");
+                            }if (proximity.equals("close") && age <=40){
+                                addCharacteristics(modelTmp, dialogAct, "expressive","close","joyful","formal","reserved");
+                            }   
                         }
+                        
                     }
                     }
                                                  
