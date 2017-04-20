@@ -65,6 +65,7 @@ private void processResponses(SystemAction systemAction, UserProfileIni profile)
             if (daClass.equals("PersonalGreet")| daClass.equals("Greeting")){ // create verbal owl DA
                 mode = Mode.VERBAL;
                 modelTmp = createVerbal(dialogAct, arousal, valence, counter);
+                addFacialExpr(modelTmp, dialogAct, "friendly");
                 if (gender.equals("female")| gender.equals("male")&& age >= 70){ //elder people
                     if (country.equals("es")){
                         if (proximity.equals("close") && personality.equals("extroverted")){
@@ -87,30 +88,14 @@ private void processResponses(SystemAction systemAction, UserProfileIni profile)
                         }
                     }
                 }
-                // check if an instance of the class Pork is contained in the input owl
-            
-            Resource classInsRes = getResourceByClass(modelTmp, "Pork");
-            if (classInsRes != null) {
-                System.out.println("This is the instance of the class pork: "+classInsRes.toString());
-                addFacialExpr(modelTmp, classInsRes, "apologetic");
-                // depending on what you have discussed with Leo, the respective annotation property could be added 
-                // either at the DA level: modelTmp.addLiteral(dialogAct, hasX, xLiteral);
-                // or at the instance level of this class: modelTmp.addLiteral(classInsRes, hasX, xLiteral);
-            }
-            
-            Resource falseTruthValueRes = getFalseTruthValueResource(modelTmp);
-            if (classInsRes != null) {
-                System.out.println("This is the instance whose truth value is false: "+falseTruthValueRes.toString());
-                addYesNoFacialExpr(modelTmp,falseTruthValueRes,"apologetic" );
-                // depending on what you have discussed with Leo, the respective annotation property could be added 
-                // either at the DA level: modelTmp.addLiteral(dialogAct, hasY, yLiteral);
-                // or at the instance level of this class: modelTmp.addLiteral(classInsRes, hasY, yLiteral);
-            }
+                
 
             }if (daClass.equals("Thank")){ // create verbal owl DA
                 
                 mode = Mode.VERBAL;
                 modelTmp = createVerbal(dialogAct, arousal, valence, counter);
+                addFacialExpr(modelTmp, dialogAct, "friendly");
+
                 if (gender.equals("female")| gender.equals("male")){ //elder people
                     
                     if (proximity.equals("close") && personality.equals("extroverted") && country.equals("es")){
@@ -131,13 +116,11 @@ private void processResponses(SystemAction systemAction, UserProfileIni profile)
                         }
                     }
                 }
-                
-                
-
             }if (daClass.equals("Apologise")){ // create verbal owl DA
                 
                 mode = Mode.VERBAL;
                 modelTmp = createVerbal(dialogAct, arousal, valence, counter);
+                addFacialExpr(modelTmp, dialogAct, "apologetic");
                 if (gender.equals("female")| gender.equals("male")){ //elder people
                     
                     if (proximity.equals("distant") && personality.equals("introverted")){
@@ -157,13 +140,12 @@ private void processResponses(SystemAction systemAction, UserProfileIni profile)
                     }if (proximity.equals("close")&&personality.equals("introverted")){
                         addCharacteristics(modelTmp, dialogAct, "expressive","close","serious","formal","heartly");
                     }
-                }
-                
-                                           
+                }                              
             }if (daClass.equals("GoodBye")){ // create verbal owl DA
                 
                 mode = Mode.VERBAL;
                 modelTmp = createVerbal(dialogAct, arousal, valence, counter);
+                addFacialExpr(modelTmp, dialogAct, "friendly");
                 if (gender.equals("female")| gender.equals("male")){ //elder people
                     if (proximity.equals("close") && personality.equals("extroverted")&& country.equals("es")){
                         if ( age >= 70){
@@ -181,7 +163,65 @@ private void processResponses(SystemAction systemAction, UserProfileIni profile)
                             addCharacteristics(modelTmp, dialogAct, "expressive","close","joyful","formal","reserved");
                         }
                     }
-                }                                 
+                    }
+                                                 
+            }if (daClass.equals("Declare")){
+                // check if an instance of the class Pork is contained in the input owl
+                mode = Mode.VERBAL;
+                modelTmp = createVerbal(dialogAct, arousal, valence, counter);
+                
+                //PORK
+                Resource Pork = getResourceByClass(modelTmp, "Pork");
+                if (Pork != null) {
+                    System.out.println("This is the instance of the class pork: "+Pork.toString());
+                    addFacialExpr(modelTmp, Pork, "apologetic");
+                    // depending on what you have discussed with Leo, the respective annotation property could be added 
+                    // either at the DA level: modelTmp.addLiteral(dialogAct, hasX, xLiteral);
+                    // or at the instance level of this class: modelTmp.addLiteral(classInsRes, hasX, xLiteral);
+                }
+                
+                //Swabian pokets
+                Resource SwabPockets = getResourceByClass(modelTmp, "Swabian Pockets");
+                if (SwabPockets != null) {
+                    System.out.println("This is the instance of the class pork: "+SwabPockets.toString());
+                    if (country.equals("ge")){
+                        addFacialExpr(modelTmp, SwabPockets, "smiley");
+                        addFacialIntensity(modelTmp, SwabPockets, "high");
+                    }else{
+                        addFacialExpr(modelTmp, SwabPockets, "smiley");
+                        addFacialIntensity(modelTmp, SwabPockets, "low");
+                    }
+                    
+                    // depending on what you have discussed with Leo, the respective annotation property could be added 
+                    // either at the DA level: modelTmp.addLiteral(dialogAct, hasX, xLiteral);
+                    // or at the instance level of this class: modelTmp.addLiteral(classInsRes, hasX, xLiteral);
+                }
+                
+                //WEATHER
+                /*Resource Weather = getResourceByClass(modelTmp, "Weather");
+                if (Weather != null) {
+                    System.out.println("This is the instance of the class weather: "+Weather.toString());
+                    if (){
+                        addFacialExpr(modelTmp, SwabPockets, "smiley");
+                        addFacialIntensity(modelTmp, SwabPockets, "high");
+                    }else{
+                        addFacialExpr(modelTmp, SwabPockets, "smiley");
+                        addFacialIntensity(modelTmp, SwabPockets, "low");
+                    }
+                    
+                    // depending on what you have discussed with Leo, the respective annotation property could be added 
+                    // either at the DA level: modelTmp.addLiteral(dialogAct, hasX, xLiteral);
+                    // or at the instance level of this class: modelTmp.addLiteral(classInsRes, hasX, xLiteral);
+                }*/
+
+                Resource falseTruthValueRes = getFalseTruthValueResource(modelTmp);
+                if (Pork != null | SwabPockets != null) {
+                    System.out.println("This is the instance whose truth value is false: "+falseTruthValueRes.toString());
+                    addYesNoFacialExpr(modelTmp,falseTruthValueRes,"apologetic" );
+                    // depending on what you have discussed with Leo, the respective annotation property could be added 
+                    // either at the DA level: modelTmp.addLiteral(dialogAct, hasY, yLiteral);
+                    // or at the instance level of this class: modelTmp.addLiteral(classInsRes, hasY, yLiteral);
+                }
             }
             if (modelTmp != null && mode != null) {
                addDA(modelTmp, mode, order);
@@ -360,6 +400,17 @@ private void processResponses(SystemAction systemAction, UserProfileIni profile)
         Literal faceLiteral = modelTmp.createLiteral(facialExpr);
         modelTmp.addLiteral(classInsRes, FacialExpression, faceLiteral);    
     }
+    public void addFacialIntensity (Model modelTmp, Resource classInsRes, String intensity){
+        Property FacIntensity = modelTmp.getProperty(modeSelectionIRI + "#" + "FacialIntensity");
+        Literal intensLiteral = modelTmp.createLiteral(intensity);
+        modelTmp.addLiteral(classInsRes, FacIntensity, intensLiteral);
+    }
+    public void addFaceEnthusiasm (Model modelTmp, Resource classInsRes, String enthusiasm){
+        Property FacEnthusiasm = modelTmp.getProperty(modeSelectionIRI + "#" + "FacialEnthusiasm");
+        Literal enthLiteral = modelTmp.createLiteral(enthusiasm);
+        modelTmp.addLiteral(classInsRes, FacEnthusiasm, enthLiteral);
+    }
+    
     public void addYesNoFacialExpr(Model modelTmp, Resource FalseTruthValueRes, String facialExpr){
         //YES OR NO
         Property FacialExpression = modelTmp.getProperty(modeSelectionIRI + "#" + "FacialExpression");
