@@ -181,7 +181,7 @@ private void processResponses(SystemAction systemAction, UserProfileIni profile)
                 Resource Pork = getResourceByClass(modelTmp, "Pork");
                 if (Pork != null) {
                     System.out.println("This is the instance of the class pork: "+Pork.toString());
-                    addFacialExpr(modelTmp, Pork, "apologetic");
+                    addFacialExpr(modelTmp, dialogAct, "apologetic");
                     // depending on what you have discussed with Leo, the respective annotation property could be added 
                     // either at the DA level: modelTmp.addLiteral(dialogAct, hasX, xLiteral);
                     // or at the instance level of this class: modelTmp.addLiteral(classInsRes, hasX, xLiteral);
@@ -192,11 +192,11 @@ private void processResponses(SystemAction systemAction, UserProfileIni profile)
                 if (SwabPockets != null) {
                     System.out.println("This is the instance of the class pork: "+SwabPockets.toString());
                     if (country.equals("ge")){
-                        addFacialExpr(modelTmp, SwabPockets, "smiley");
-                        addFacialIntensity(modelTmp, SwabPockets, "high");
+                        addFacialExpr(modelTmp, dialogAct, "smiley");
+                        addFacialIntensity(modelTmp, dialogAct, "high");
                     }else{
-                        addFacialExpr(modelTmp, SwabPockets, "smiley");
-                        addFacialIntensity(modelTmp, SwabPockets, "low");
+                        addFacialExpr(modelTmp, dialogAct, "smiley");
+                        addFacialIntensity(modelTmp, dialogAct, "low");
                     }
                     
                     // depending on what you have discussed with Leo, the respective annotation property could be added 
@@ -224,7 +224,7 @@ private void processResponses(SystemAction systemAction, UserProfileIni profile)
                 Resource falseTruthValueRes = getFalseTruthValueResource(modelTmp);
                 if (Pork != null | SwabPockets != null) {
                     System.out.println("This is the instance whose truth value is false: "+falseTruthValueRes.toString());
-                    addYesNoFacialExpr(modelTmp,falseTruthValueRes,"apologetic" );
+                    addYesNoFacialExpr(modelTmp,dialogAct,"apologetic" );
                     // depending on what you have discussed with Leo, the respective annotation property could be added 
                     // either at the DA level: modelTmp.addLiteral(dialogAct, hasY, yLiteral);
                     // or at the instance level of this class: modelTmp.addLiteral(classInsRes, hasY, yLiteral);
@@ -401,27 +401,27 @@ private void processResponses(SystemAction systemAction, UserProfileIni profile)
     Literal socLiteral = modelTmp.createLiteral(social);
     modelTmp.addLiteral(dialogAct, hasSocial, socLiteral);
     }
-    public void addFacialExpr(Model modelTmp, Resource classInsRes, String facialExpr){
+    public void addFacialExpr(Model modelTmp, Resource dialogAct, String facialExpr){
         //TARGETED WORD
         Property FacialExpression = modelTmp.getProperty(modeSelectionIRI + "#" + "FacialExpression");
         Literal faceLiteral = modelTmp.createLiteral(facialExpr);
-        modelTmp.addLiteral(classInsRes, FacialExpression, faceLiteral);    
+        modelTmp.addLiteral(dialogAct, FacialExpression, faceLiteral);    
     }
-    public void addFacialIntensity (Model modelTmp, Resource classInsRes, String intensity){
+    public void addFacialIntensity (Model modelTmp, Resource dialogAct, String intensity){
         Property FacIntensity = modelTmp.getProperty(modeSelectionIRI + "#" + "FacialIntensity");
         Literal intensLiteral = modelTmp.createLiteral(intensity);
-        modelTmp.addLiteral(classInsRes, FacIntensity, intensLiteral);
+        modelTmp.addLiteral(dialogAct, FacIntensity, intensLiteral);
     }
-    public void addFaceEnthusiasm (Model modelTmp, Resource classInsRes, String enthusiasm){
+    public void addFaceEnthusiasm (Model modelTmp, Resource dialogAct, String enthusiasm){
         Property FacEnthusiasm = modelTmp.getProperty(modeSelectionIRI + "#" + "FacialEnthusiasm");
         Literal enthLiteral = modelTmp.createLiteral(enthusiasm);
-        modelTmp.addLiteral(classInsRes, FacEnthusiasm, enthLiteral);
+        modelTmp.addLiteral(dialogAct, FacEnthusiasm, enthLiteral);
     }
     
-    public void addYesNoFacialExpr(Model modelTmp, Resource FalseTruthValueRes, String facialExpr){
+    public void addYesNoFacialExpr(Model modelTmp, Resource dialogAct, String facialExpr){
         //YES OR NO
         Property FacialExpression = modelTmp.getProperty(modeSelectionIRI + "#" + "FacialExpression");
         Literal faceLiteral = modelTmp.createLiteral(facialExpr);
-        modelTmp.addLiteral(FalseTruthValueRes, FacialExpression, faceLiteral);
+        modelTmp.addLiteral(dialogAct, FacialExpression, faceLiteral);
     }
 }
