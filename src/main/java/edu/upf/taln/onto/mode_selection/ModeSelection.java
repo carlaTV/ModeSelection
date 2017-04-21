@@ -60,11 +60,11 @@ public final class ModeSelection {
             Mode mode = null;
             Model modelTmp = null;
 
-            if (daClass.equals("PersonalGreet") | daClass.equals("Greeting")) { // create verbal owl DA
+            if (daClass.equals("PersonalGreet") || daClass.equals("SimpleGreet")) { // create verbal owl DA
                 mode = Mode.VERBAL;
                 modelTmp = createVerbal(dialogAct, arousal, valence, counter);
                 addFacialExpr(modelTmp, dialogAct, "friendly");
-                if (gender.equals("female") | gender.equals("male") && age >= 70) { //elder people
+                if (gender.equals("female") || gender.equals("male") && age >= 70) { //elder people
                     if (country.equals("es")) {
                         if (proximity.equals("close") && personality.equals("extroverted")) {
                             addCharacteristics(modelTmp, dialogAct, "very expressive", "close", "joyful", "informal", "colloquial");
@@ -76,7 +76,7 @@ public final class ModeSelection {
                         }
                     }
                 }
-                if (gender.equals("male") | gender.equals("female") && age <= 40) {
+                if (gender.equals("male") || gender.equals("female") && age <= 40) {
                     if (country.equals("es")) {
                         if (proximity.equals("close") && personality.equals("extroverted")) {
                             addCharacteristics(modelTmp, dialogAct, "expressive", "close", "joyful", "informal", "colloquial");
@@ -90,13 +90,13 @@ public final class ModeSelection {
                 }
 
             }
-            if (daClass.equals("Thank") | daClass.equals("AnswerThank")) { // create verbal owl DA
+            if (daClass.equals("Thank") || daClass.equals("AnswerThank")) { // create verbal owl DA
 
                 mode = Mode.VERBAL;
                 modelTmp = createVerbal(dialogAct, arousal, valence, counter);
                 addFacialExpr(modelTmp, dialogAct, "friendly");
 
-                if (gender.equals("female") | gender.equals("male")) { //elder people
+                if (gender.equals("female") || gender.equals("male")) { //elder people
 
                     if (country.equals("es")) {
                         if (proximity.equals("close") && personality.equals("extroverted")) {
@@ -125,7 +125,7 @@ public final class ModeSelection {
                 mode = Mode.VERBAL;
                 modelTmp = createVerbal(dialogAct, arousal, valence, counter);
                 addFacialIntention(modelTmp, dialogAct, "apologetic");
-                if (gender.equals("female") | gender.equals("male")) { //elder people
+                if (gender.equals("female") || gender.equals("male")) { //elder people
 
                     if (proximity.equals("distant") && personality.equals("introverted")) {
                         if (age >= 70) {
@@ -148,11 +148,11 @@ public final class ModeSelection {
                     }
                 }
             }
-            if (daClass.equals("GoodBye") | daClass.equals("SayGoodBye")) { // create verbal owl DA
+            if (daClass.equals("GoodBye") || daClass.equals("SayGoodBye")) { // create verbal owl DA
                 mode = Mode.VERBAL;
                 modelTmp = createVerbal(dialogAct, arousal, valence, counter);
                 addFacialExpr(modelTmp, dialogAct, "friendly");
-                if (gender.equals("female") | gender.equals("male")) { //elder people
+                if (gender.equals("female") || gender.equals("male")) { //elder people
                     if (country.equals("es")) {
                         if (proximity.equals("close") && personality.equals("extroverted")) {
                             if (age >= 70) {
@@ -209,7 +209,7 @@ public final class ModeSelection {
                     }
                 }
                 /*Resource falseTruthValueRes = getFalseTruthValueResource(modelTmp);
-                if (Pork != null | SwabPockets != null) {
+                if (Pork != null || SwabPockets != null) {
                     System.out.println("This is the instance whose truth value is false: " + falseTruthValueRes.toString());
                     addYesNoFacialExpr(modelTmp, dialogAct, "apologetic");
                 }*/
@@ -233,13 +233,13 @@ public final class ModeSelection {
                 
             }*/
             
-            if (daClass.equals("ReadNewspaper") | daClass.equals("ShowWebpage") ){
+            if (daClass.equals("ReadNewspaper") || daClass.equals("ShowWebpage") ){
                 mode = Mode.VERBAL;
                 modelTmp = createVerbal(dialogAct, arousal, valence, counter);
                 addFacialExpr(modelTmp, dialogAct, "default");
             }
             
-            if (daClass.equals("AskTask") | daClass.equals("AskTaskFollowUp")){
+            if (daClass.equals("AskTask") || daClass.equals("AskTaskFollowUp")){
                 mode = Mode.VERBAL;
                 modelTmp = createVerbal(dialogAct, arousal, valence, counter);
                 addFacialExpr(modelTmp, dialogAct, "smiley");
