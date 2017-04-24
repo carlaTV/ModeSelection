@@ -233,7 +233,7 @@ public final class ModeSelection {
                 
             }*/
             
-            if (daClass.equals("ReadNewspaper") || daClass.equals("ShowWebpage") ){
+            if (daClass.equals("ReadNewspaper") || daClass.equals("ShowWebpage") || daClass.equals("Canned")){
                 mode = Mode.VERBAL;
                 modelTmp = createVerbal(dialogAct, arousal, valence, counter);
                 addFacialExpr(modelTmp, dialogAct, "default");
