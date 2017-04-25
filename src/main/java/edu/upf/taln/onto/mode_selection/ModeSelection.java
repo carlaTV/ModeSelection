@@ -9,6 +9,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
 import com.hp.hpl.jena.rdf.model.*;
+import java.io.File;
+import org.apache.commons.configuration.ConfigurationException;
 
 public final class ModeSelection {
 
@@ -18,6 +20,12 @@ public final class ModeSelection {
     static String contextIRI = "http://kristina-project.eu/ontologies/la/context";
     static String baseIRI = "http://kristina-project.eu/ms";
     static int counter = 0;
+    
+	static String iniFilePath = "src/main/resources/";
+	
+    public static void setIniFilePath(String ontoIniDirectory) {
+        iniFilePath = ontoIniDirectory;
+    }
 
     Map<Integer, String> verbalDialogueElements = new HashMap<>();
     Map<Integer, String> nonVerbalDialogueElements = new HashMap<>();
@@ -27,9 +35,18 @@ public final class ModeSelection {
         VERBAL, NON_VERBAL
     };
 
-    public ModeSelection(String dmOutputOWL, UserProfileIni profile) throws CustomException, UnsupportedEncodingException {
+    public static UserProfileIni loadProfile(String language, String scenario) throws ConfigurationException {
+        
+        File profileFile = new File(iniFilePath + "proto2_ms_profile_" + scenario + "_" + language + ".ini");
+        if (!profileFile.exists()) {
+            profileFile = new File(iniFilePath + "default_profile.ini");
+        }
+        return new UserProfileIni(profileFile);
+    }
 
-        SystemAction sa = new SystemAction(dmOutputOWL);
+    public ModeSelection(String owlStr, UserProfileIni profile) throws CustomException, UnsupportedEncodingException {
+
+        SystemAction sa = new SystemAction(owlStr);
 
         processResponses(sa, profile);
     }
