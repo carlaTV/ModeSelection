@@ -20,9 +20,9 @@ public final class ModeSelection {
     static String contextIRI = "http://kristina-project.eu/ontologies/la/context";
     static String baseIRI = "http://kristina-project.eu/ms";
     static int counter = 0;
-    
-	static String iniFilePath = "src/main/resources/";
-	
+
+    static String iniFilePath = "src/main/resources/";
+
     public static void setIniFilePath(String ontoIniDirectory) {
         iniFilePath = ontoIniDirectory;
     }
@@ -31,11 +31,12 @@ public final class ModeSelection {
     Map<Integer, String> nonVerbalDialogueElements = new HashMap<>();
 
     enum Mode {
+
         VERBAL, NON_VERBAL
     };
 
     public static UserProfileIni loadProfile(String language, String scenario) throws ConfigurationException {
-        
+
         File profileFile = new File(iniFilePath + "proto2_ms_profile_" + scenario + "_" + language + ".ini");
         if (!profileFile.exists()) {
             profileFile = new File(iniFilePath + "default_profile.ini");
@@ -54,6 +55,16 @@ public final class ModeSelection {
 
         float valence = systemAction.getValence();
         float arousal = systemAction.getArousal();
+        float defV;
+        float defA;
+        float V = 0;
+        float A = 0;
+
+        float ka = 0;
+        float kv = 0;
+
+        String facExpr = null;
+
         List<Resource> dialogActs = systemAction.getDialogActs();
 
         //identity
@@ -67,344 +78,401 @@ public final class ModeSelection {
 
         // process the read DAs in order to assign them to verbal vs non-verbal output and add respective mode-selection tags		
         for (int order = 0; order < dialogActs.size(); order++) {
-        	
-	        Resource dialogAct = dialogActs.get(order);
-	    	
-	        String daClass = systemAction.getClass(dialogAct); // get the type of the DA instance
-	        System.out.println(order + " DA is " + daClass);
-	
-	        Mode mode = Mode.VERBAL;
-	        Model modelTmp = createVerbal(dialogAct, arousal, valence, counter);
-	        
-	     	String hasExpressivity="neutral"; // "very expressive" "lower expressive" "expressive"
-	    	String hasProximity="neutral";    // "close" "distant" "medium close"
-	    	String hasAttitude="neutral";     // "joyful" "thankful" "serious"
-	    	String hasStyle="neutral";        // "formal" "informal" 
-	    	String hasSocial="neutral";       // "coloquial" "reserved" "heartly"
-	    	
-	    	if (profile.getPersonality().equals("introverted")) {
-	    		if (profile.getProximity().equals("distant")) {
-	    			hasProximity = "distant";
-	    			hasStyle = "formal";
-	    			hasSocial = "reserved";
-	    		}
-	    		
-	    	} else { // Extroverted	    		
-	    		if (profile.getProximity().equals("close")) {
-	    			hasProximity = "close";
-	    			hasStyle = "informal";
-	    			hasSocial = "coloquial";
-	    		}
-	    	}
-	    	
-	    	if (profile.getAge() < 40) {
-	    		hasStyle = "informal";
-	    	}
-	    	
-	    	if (profile.getCountry().equals("es")) {
-	    		hasSocial = "heartly";
-	    		hasExpressivity = "very expressive";
-	    	}
-	    		    	
-	    	
-	    	switch (daClass) {
-				case "PersonalGreet":
-				case "SimpleGreet":
-		            addFacialExpr(modelTmp, dialogAct, "smiley");
-		            addGesture(modelTmp, dialogAct, "greet");
-					break;
-					
-				case "SimpleSayGoodbye":
-				case "PersonalSayGoodbye":
-		            addFacialExpr(modelTmp, dialogAct, "smiley");
-		            addGesture(modelTmp, dialogAct, "goodbye");					
-					break;
-	
-				case "SimpleMotivate":
-		            addFacialExpr(modelTmp, dialogAct, "smiley");
-					break;
-					
-				case "SimpleApologise":
-				case "PersonalApologise":
-		            addFacialExpr(modelTmp, dialogAct, "apologetic");
-					break;
 
-				case "Thank":
-		            addFacialExpr(modelTmp, dialogAct, "smiley");
-					break;
+            Resource dialogAct = dialogActs.get(order);
 
-				case "AskTaskFollowUp":
-		            addFacialExpr(modelTmp, dialogAct, "smiley");
-					break;
+            String daClass = systemAction.getClass(dialogAct); // get the type of the DA instance
+            System.out.println(order + " DA is " + daClass);
 
-				case "Declare":
-					
-		            //ALLERGY
-		            Resource Allergy = getResourceByClass(modelTmp, "Allergy");
-		            if (Allergy != null) {
-		                addFacialExpr(modelTmp, dialogAct, "worried");
-		            }
-		
-		            //Swabian pokets
-		            Resource SwabPockets = getResourceByClass(modelTmp, "SwabianPockets");
-		            if (SwabPockets != null) {
+            Mode mode = null;
+            Model modelTmp = null;
 
-		                if (country.equals("ge")) {
-		                    addFacialExpr(modelTmp, dialogAct, "smiley");
-		                    addFacialIntensity(modelTmp, dialogAct, "high");
-		                } else {
-		                    addFacialExpr(modelTmp, dialogAct, "smiley");
-		                    addFacialIntensity(modelTmp, dialogAct, "low");
-		                }
-		            }
-		            
-		            Resource falseTruthValueRes = getFalseTruthValueResource(modelTmp);
-		            if (falseTruthValueRes!=null) {
-		            	addFacialIntention(modelTmp, dialogAct, "apologetic");
-		            }
-							
-				default:
-					break;
-			}
+            if (daClass.equals("PersonalGreet") || daClass.equals("SimpleGreet")) { // create verbal owl DA
+                mode = Mode.VERBAL;
+                
+                facExpr = "joyful";
+                defV = (float) 0.67;
+                defA = (float) 0.32;
 
-	    	addCharacteristics(modelTmp, dialogAct, hasExpressivity, hasProximity, hasAttitude, hasStyle, hasSocial);
-            addDA(modelTmp, mode, order);
+                if (defV < valence) {
+                    A = defA;
+                    V = valence;
+
+                } else {
+                    A = defA;
+                    V = defV;
+                }
+
+                //if (age >= 70){ //elder people
+                if (country.equals("es") || country.equals("Turkey")) {
+                    kv = (float) 1.49;
+                    V = V * kv;
+                    ka = (float) 1.00;
+                    A = A * ka;
+                }
+                if (country.equals("ge") || country.equals("Poland")) {
+                    kv = (float) 1.25;
+                    V = V * kv;
+                    ka = (float) 1.13;
+                    A = A * ka;
+                }
+                /*}if (age <= 40){
+                    if (country.equals("es")) {
+                        if (proximity.equals("close") && personality.equals("extroverted")) {
+                            addCharacteristics(modelTmp, dialogAct, "close","informal", "extroverted", "high", facExpr, "colloquial");
+                        }
+                    }
+                    if (country.equals("ge")) {
+                        if (proximity.equals("distant") && personality.equals("introverted")) {
+                             addCharacteristics(modelTmp, dialogAct, "proximity", "style", "personality", "expressivity", facExpr, "social");
+                        }
+                    }*/
+                //}
+                ///va aqui!!!!
+
+            }
+            if (daClass.equals("Thank") || daClass.equals("AnswerThank")) { // create verbal owl DA
+
+                mode = Mode.VERBAL;
+
+                defV = (float) 0.68;
+                defA = (float) 0.27;
+
+                if (defV < valence) {
+                    A = defA;
+                    V = valence;
+
+                } else {
+                    A = defA;
+                    V = defV;
+                }
+
+                //modelTmp = createVerbal(dialogAct, A, V, counter);
+
+                facExpr = "grateful";
+                //addFacialExpr(modelTmp, dialogAct, facExpr);
+                
+                if (country.equals("es") || country.equals("Turkey")) {
+                    kv = (float) 1.35;
+                    V = V * kv;
+                    ka = (float) 0.96;
+                    A = A * ka;
+                }
+                if (country.equals("ge") || country.equals("Poland")) {
+                    kv = (float) 0.61;
+                    V = V * kv;
+                    ka = (float) 0.01;
+                    A = A * ka;
+                }
+
+            }
+            if (daClass.equals("Apologise")) { // create verbal owl DA
+
+                mode = Mode.VERBAL;
+
+                defV = (float) -0.16;
+                defA = (float) -0.29;
+
+                if (defV < valence) {
+                    A = defA;
+                    V = valence;
+
+                } else {
+                    A = defA;
+                    V = defV;
+                }
+
+                facExpr = "apologetic";
+                
+                if (country.equals("es") || country.equals("Turkey")) {
+                    kv = (float) 2.06;
+                    V = V * kv;
+                    ka = (float) -0.24;
+                    A = A * ka;
+                }
+                if (country.equals("ge") || country.equals("Poland")) {
+                    kv = (float) 0.38;
+                    V = V * kv;
+                    ka = (float) 0.79;
+                    A = A * ka;
+                }
+            }
+            if (daClass.equals("GoodBye") || daClass.equals("SayGoodBye")) { // create verbal owl DA
+                mode = Mode.VERBAL;
+
+                defV = (float) 0.54;
+                defA = (float) 0.59;
+
+                if (defV < valence) {
+                    A = defA;
+                    V = valence;
+
+                } else {
+                    A = defA;
+                    V = defV;
+                }
+                
+                facExpr = "content";
+                
+                if (country.equals("es") || country.equals("Turkey")) {
+                    kv = (float) 1.67;
+                    V = V * kv;
+                    ka = (float) 0.39;
+                    A = A * ka;
+                }
+                if (country.equals("ge") || country.equals("Poland")) {
+                    kv = (float) 1.65;
+                    V = V * kv;
+                    ka = (float) 0.10;
+                    A = A * ka;
+                }
+
+            }
+            if (daClass.equals("Declare")) {
+                mode = Mode.VERBAL;
+                //modelTmp = createVerbal(dialogAct, arousal, valence, counter);
+
+                //PORK
+                Resource Pork = getResourceByClass(modelTmp, "Pork");
+                if (Pork != null) {
+                    System.out.println("This is the instance of the class pork: " + Pork.toString());
+                    addFacialIntention(modelTmp, Pork, "apologetic");
+                }
+
+                //ALLERGY
+                Resource Allergy = getResourceByClass(modelTmp, "Allergy");
+                if (Allergy != null) {
+                    System.out.println("This is the instance of the class Allergy: " + Allergy.toString());
+                    addFacialIntention(modelTmp, Allergy, "worried");
+                }
+
+                //Swabian pokets
+                Resource SwabPockets = getResourceByClass(modelTmp, "SwabianPockets");
+                if (SwabPockets != null) {
+                    System.out.println("This is the instance of the class Swabian Pockets: " + SwabPockets.toString());
+                    if (country.equals("ge")) {
+                        facExpr = "joyful";
+                        //addFacialExpr(modelTmp, dialogAct, "smiley");
+                        //canviem dialogAct per classInsRes:
+                        //addFacialExpr(modelTmp, SwabPockets, "smiley");
+                        //addFacialIntensity(modelTmp, SwabPockets, "high");
+                        kv = (float) 1.67;
+                        V = valence * kv;
+                        ka = (float) 0.39;
+                        A = arousal * ka;
+                    } else {
+                        //addFacialExpr(modelTmp, dialogAct, "smiley");
+                        //addFacialIntensity(modelTmp, dialogAct, "low");
+                        facExpr = "neutral";
+                        kv = (float) 1.67;
+                        V = valence * kv;
+                        ka = (float) 0.39;
+                        A = arousal * ka; 
+                    }
+                }
+                /*Resource falseTruthValueRes = getFalseTruthValueResource(modelTmp);
+                if (Pork != null || SwabPockets != null) {
+                    System.out.println("This is the instance whose truth value is false: " + falseTruthValueRes.toString());
+                    addYesNoFacialExpr(modelTmp, dialogAct, "apologetic");
+                }*/
+            }
+            /*if (daClass.equals("ShowWeather")){
+                mode = Mode.VERBAL;
+                modelTmp = createVerbal(dialogAct, arousal, valence, counter);
+                //WEATHER
+                Resource Cold = getWeather(modelTmp, "cold");
+                if (Cold != null) {
+                    System.out.println("This is the instance of the class cold: " + Cold.toString());
+                    addFacialExpr(modelTmp, Cold, "neutral");
+                    //addFacialIntensity(modelTmp, Cold, "high");
+                }
+                Resource hot = getWeather(modelTmp, "hot");
+                if (hot != null) {
+                    System.out.println("This is the instance of the class cold: " + Cold.toString());
+                    addFacialExpr(modelTmp, hot, "smiley");
+                    addFaceEnthusiasm(modelTmp, hot, "high");
+                }
+                
+            }*/
+
+            if (daClass.equals("ReadNewspaper") || daClass.equals("ShowWebpage") ) {
+                mode = Mode.VERBAL;
+                defV = (float) 0.75;
+                defA = (float) 0.48;
+
+                if (defV < valence) {
+                    A = defA;
+                    V = valence;
+
+                } else {
+                    A = defA;
+                    V = defV;
+                }
+
+                facExpr = "enthusiastic";
+                
+                if (country.equals("es") || country.equals("Turkey")) {
+                    kv = (float) 1.00;
+                    V = V * kv;
+                    ka = (float) 1.33;
+                    A = A * ka;
+                }
+                if (country.equals("ge") || country.equals("Poland")) {
+                    kv = (float) 0.97;
+                    V = V * kv;
+                    ka = (float) 0.81;
+                    A = A * ka;
+                }
+            }
+
+            if (daClass.equals("AskTask") || daClass.equals("AskTaskFollowUp")) {
+                mode = Mode.VERBAL;
+                defV = (float) 0.40;
+                defA = (float) 0.60;
+
+                if (defV < valence) {
+                    A = defA;
+                    V = valence;
+
+                } else {
+                    A = defA;
+                    V = defV;
+                }
+                
+                facExpr = "curious";
+                
+                if (country.equals("es") || country.equals("Turkey")) {
+                    kv = (float) 0.65;
+                    V = V * kv;
+                    ka = (float) 0.88;
+                    A = A * ka;
+                }
+                if (country.equals("ge") || country.equals("Poland")) {
+                    kv = (float) 0.58;
+                    V = V * kv;
+                    ka = (float) 0.58;
+                    A = A * ka;
+                }
+            }
+
+            if (daClass.equals("CalmDown")) {
+                mode = Mode.VERBAL;
+                defV = (float) 0.70;
+                defA = (float) -0.14;
+
+                if (defV < valence) {
+                    A = defA;
+                    V = valence;
+
+                } else {
+                    A = defA;
+                    V = defV;
+                }
+                
+                facExpr = "caring";
+                
+                if (country.equals("es") || country.equals("Turkey")) {
+                    kv = (float) 1.39;
+                    V = V * kv;
+                    ka = (float) 0.21;
+                    A = A * ka;
+                }
+                if (country.equals("ge") || country.equals("Poland")) {
+                    kv = (float) 1.00;
+                    V = V * kv;
+                    ka = (float) 1.20;
+                    A = A * ka;
+                }
+            }
+            if (daClass.equals("Ack")) {
+                mode = Mode.VERBAL;
+                defV = (float) 0.51;
+                defA = (float) 0.00;
+
+                if (defV < valence) {
+                    A = defA;
+                    V = valence;
+
+                } else {
+                    A = defA;
+                    V = defV;
+                }
+                
+                facExpr = "relaxed";
+                
+                if (country.equals("es") || country.equals("Turkey")) {
+                    kv = (float) 1.02;
+                    V = V * kv;
+                    ka = (float) 1.00;
+                    A = A * ka;
+                }
+                if (country.equals("ge") || country.equals("Poland")) {
+                    kv = (float) 1.22;
+                    V = V * kv;
+                    ka = (float) 1.00;
+                    A = A * ka;
+                }
+            }
+            if (daClass.equals("Reject")) {
+                mode = Mode.VERBAL;
+                defV = (float) 0.07;
+                defA = (float) 0.02;
+
+                if (defV < valence) {
+                    A = defA;
+                    V = valence;
+
+                } else {
+                    A = defA;
+                    V = defV;
+                }
+                
+                facExpr = "serious";
+                
+                if (country.equals("es") || country.equals("Turkey")) {
+                    kv = (float) 2.14;
+                    V = V * kv;
+                    ka = (float) 6.50;
+                    A = A * ka;
+                }
+                if (country.equals("ge") || country.equals("Poland")) {
+                    kv = (float) 1.00;
+                    V = V * kv;
+                    ka = (float) -7.50;
+                    A = A * ka;
+                }
+            }
+            
+            modelTmp = createVerbal(dialogAct, A, V, counter);
+           
+            addFacialExpr(modelTmp, dialogAct, facExpr);
+
+            if (V > 0 && kv > 1) {
+                if (kv > 1) {
+                    if (ka > 1) {
+                        //CASE 1
+                        //modelTmp, dialogAct, "proximity", "style", "personality", "expressivity", facExpr, "social"
+                        addCharacteristics(modelTmp, dialogAct, "close", "informal", "extroverted", "high", facExpr, "colloquial");  
+                    } else {
+                        //CASE 2
+                        addCharacteristics(modelTmp, dialogAct, "close", "informal", "introverted", "medium", facExpr, "heartly");
+                    }
+                }if (kv <= 1){
+                    if(ka > 1){
+                        //CASE 3
+                        addCharacteristics(modelTmp, dialogAct, "distant", "formal", "extroverted", "medium", facExpr, "heartly");
+                    }else{
+                        //CASE 4
+                        addCharacteristics(modelTmp, dialogAct, "distant", "formal", "introverted", "low", facExpr, "reserved");
+                    }
+                }
+            }
+
+            if (modelTmp != null && mode != null) {
+                addDA(modelTmp, mode, order);
+            }
         }
 
-    }
-    
-    private void addGesture(Model modelTmp, Resource dialogAct, String gestureExpr) {
-        Property gestureExpression = modelTmp.getProperty(modeSelectionIRI + "#" + "GestureExpression");
-        Literal gestureLiteral = modelTmp.createLiteral(gestureExpr);
-        modelTmp.addLiteral(dialogAct, gestureExpression, gestureLiteral);		
-	}
-
-	private void carlaRules(SystemAction systemAction, UserProfileIni profile) throws CustomException {
-    	
-        float valence = systemAction.getValence();
-        float arousal = systemAction.getArousal();
-        List<Resource> dialogActs = systemAction.getDialogActs();
-
-        //identity
-        String gender = profile.getGender();
-        int age = profile.getAge();
-        //culture
-        String country = profile.getCountry();
-        //personality
-        String proximity = profile.getProximity();
-        String personality = profile.getPersonality();
-
-        // process the read DAs in order to assign them to verbal vs non-verbal output and add respective mode-selection tags		
-        for (int order = 0; order < dialogActs.size(); order++) {
-	        Resource dialogAct = dialogActs.get(order);
-	
-	        String daClass = systemAction.getClass(dialogAct); // get the type of the DA instance
-	        System.out.println(order + " DA is " + daClass);
-	
-	        Mode mode = null;
-	        Model modelTmp = null;
-	        
-	        // -----------------------------------------------------------------------------------------
-	        if (daClass.equals("PersonalGreet") || daClass.equals("SimpleGreet")) { // create verbal owl DA
-	            mode = Mode.VERBAL;
-	            modelTmp = createVerbal(dialogAct, arousal, valence, counter);
-	            addFacialExpr(modelTmp, dialogAct, "friendly");
-	            if (gender.equals("female") || gender.equals("male") && age >= 70) { //elder people
-	                if (country.equals("es")) {
-	                    if (proximity.equals("close") && personality.equals("extroverted")) {
-	                        addCharacteristics(modelTmp, dialogAct, "very expressive", "close", "joyful", "informal", "colloquial");
-	                    }
-	                }
-	                if (country.equals("ge")) {
-	                    if (proximity.equals("distant") && personality.equals("introverted")) {
-	                        addCharacteristics(modelTmp, dialogAct, "expressive", "medium close", "neutral", "formal", "reserved");
-	                    }
-	                }
-	            }
-	            if (gender.equals("male") || gender.equals("female") && age <= 40) {
-	                if (country.equals("es")) {
-	                    if (proximity.equals("close") && personality.equals("extroverted")) {
-	                        addCharacteristics(modelTmp, dialogAct, "expressive", "close", "joyful", "informal", "colloquial");
-	                    }
-	                }
-	                if (country.equals("ge")) {
-	                    if (proximity.equals("distant") && personality.equals("introverted")) {
-	                        addCharacteristics(modelTmp, dialogAct, "expressive", "medium close", "joyful", "formal", "heartly");
-	                    }
-	                }
-	            }
-	
-	        }
-	        if (daClass.equals("Thank") || daClass.equals("AnswerThank")) { // create verbal owl DA
-	
-	            mode = Mode.VERBAL;
-	            modelTmp = createVerbal(dialogAct, arousal, valence, counter);
-	            addFacialExpr(modelTmp, dialogAct, "friendly");
-	
-	            if (gender.equals("female") || gender.equals("male")) { //elder people
-	
-	                if (country.equals("es")) {
-	                    if (proximity.equals("close") && personality.equals("extroverted")) {
-	                        if (age >= 70) { //spanish elderly
-	                            addCharacteristics(modelTmp, dialogAct, "expressive", "close", "thankful", "formal", "heartly");
-	                        }
-	                        if (age <= 40) { //spanish young
-	                            addCharacteristics(modelTmp, dialogAct, "expressive", "close", "thankful", "informal", "heartly");
-	                        }
-	                    }
-	                }
-	                if (country.equals("ge")) {
-	                    if (proximity.equals("distant") && personality.equals("introverted")) {
-	                        if (age >= 70) { //spanish elderly
-	                            addCharacteristics(modelTmp, dialogAct, "expressive", "distant", "thankful", "formal", "heartly");
-	                        }
-	                        if (age <= 40) { //spanish young
-	                            addCharacteristics(modelTmp, dialogAct, "expressive", "distant", "thankful", "formal", "heartly");
-	                        }
-	                    }
-	                }
-	            }
-	        }
-	        if (daClass.equals("Apologise")) { // create verbal owl DA
-	
-	            mode = Mode.VERBAL;
-	            modelTmp = createVerbal(dialogAct, arousal, valence, counter);
-	            addFacialIntention(modelTmp, dialogAct, "apologetic");
-	            if (gender.equals("female") || gender.equals("male")) { //elder people
-	
-	                if (proximity.equals("distant") && personality.equals("introverted")) {
-	                    if (age >= 70) {
-	                        if (country.equals("es")) {
-	
-	                            addCharacteristics(modelTmp, dialogAct, "expressive", "close", "serious", "formal", "heartly");
-	                        }
-	                        if (country.equals("ge")) {
-	
-	                            addCharacteristics(modelTmp, dialogAct, "lower expressive", "distant", "serious", "formal", "heartly");
-	                        }
-	                    }
-	                    if (age <= 40) {
-	                        addCharacteristics(modelTmp, dialogAct, "expressive", "distant", "serious", "formal", "heartly");
-	                    }
-	
-	                }
-	                if (proximity.equals("close") && personality.equals("introverted")) {
-	                    addCharacteristics(modelTmp, dialogAct, "expressive", "close", "serious", "formal", "heartly");
-	                }
-	            }
-	        }
-	        if (daClass.equals("GoodBye") || daClass.equals("SayGoodBye")) { // create verbal owl DA
-	            mode = Mode.VERBAL;
-	            modelTmp = createVerbal(dialogAct, arousal, valence, counter);
-	            addFacialExpr(modelTmp, dialogAct, "friendly");
-	            if (gender.equals("female") || gender.equals("male")) { //elder people
-	                if (country.equals("es")) {
-	                    if (proximity.equals("close") && personality.equals("extroverted")) {
-	                        if (age >= 70) {
-	                            addCharacteristics(modelTmp, dialogAct, "expressive ", "close", "joyful", "formal", "heartly");
-	
-	                        }
-	                        if (age <= 40) {
-	                            addCharacteristics(modelTmp, dialogAct, "expressive", "close", "joyful", "informal", "colloquial");
-	                        }
-	                    }
-	                }
-	                if (country.equals("ge")) {
-	                    if (personality.equals("introverted")) {
-	                        if (proximity.equals("distant") && age >= 70) {
-	                            addCharacteristics(modelTmp, dialogAct, "expressive", "distant", "joyful", "formal", "reserved");
-	
-	                        }
-	                        if (proximity.equals("close") && age <= 40) {
-	                            addCharacteristics(modelTmp, dialogAct, "expressive", "close", "joyful", "formal", "reserved");
-	                        }
-	                    }
-	                }
-	            }
-	
-	        }
-	        if (daClass.equals("Declare")) {
-	            mode = Mode.VERBAL;
-	            modelTmp = createVerbal(dialogAct, arousal, valence, counter);
-	
-	            //PORK
-	            Resource Pork = getResourceByClass(modelTmp, "Pork");
-	            if (Pork != null) {
-	                System.out.println("This is the instance of the class pork: " + Pork.toString());
-	                addFacialIntention(modelTmp, Pork, "apologetic");                    
-	            }
-	
-	            //ALLERGY
-	            Resource Allergy = getResourceByClass(modelTmp, "Allergy");
-	            if (Allergy != null) {
-	                System.out.println("This is the instance of the class Allergy: " + Allergy.toString());
-	                addFacialIntention(modelTmp, Allergy, "worried");
-	            }
-	
-	            //Swabian pokets
-	            Resource SwabPockets = getResourceByClass(modelTmp, "SwabianPockets");
-	            if (SwabPockets != null) {
-	                System.out.println("This is the instance of the class Swabian Pockets: " + SwabPockets.toString());
-	                if (country.equals("ge")) {
-	                    addFacialExpr(modelTmp, dialogAct, "smiley");
-	                    addFacialIntensity(modelTmp, dialogAct, "high");
-	                } else {
-	                    addFacialExpr(modelTmp, dialogAct, "smiley");
-	                    addFacialIntensity(modelTmp, dialogAct, "low");
-	                }
-	            }
-	            // Stam: DA level tag for negation
-	            Resource falseTruthValueRes = getFalseTruthValueResource(modelTmp);
-	            if (falseTruthValueRes!=null)
-	            	 addFacialIntention(modelTmp, dialogAct, "apologetic");
-	            
-	            /*Resource falseTruthValueRes = getFalseTruthValueResource(modelTmp);
-	            if (Pork != null || SwabPockets != null) {
-	                System.out.println("This is the instance whose truth value is false: " + falseTruthValueRes.toString());
-	                addYesNoFacialExpr(modelTmp, dialogAct, "apologetic");
-	            }*/
-	        }
-	        /*if (daClass.equals("ShowWeather")){
-	            mode = Mode.VERBAL;
-	            modelTmp = createVerbal(dialogAct, arousal, valence, counter);
-	            //WEATHER
-	            Resource Cold = getWeather(modelTmp, "cold");
-	            if (Cold != null) {
-	                System.out.println("This is the instance of the class cold: " + Cold.toString());
-	                addFacialExpr(modelTmp, Cold, "neutral");
-	                //addFacialIntensity(modelTmp, Cold, "high");
-	            }
-	            Resource hot = getWeather(modelTmp, "hot");
-	            if (hot != null) {
-	                System.out.println("This is the instance of the class cold: " + Cold.toString());
-	                addFacialExpr(modelTmp, hot, "smiley");
-	                addFaceEnthusiasm(modelTmp, hot, "high");
-	            }
-	            
-	        }*/
-	        
-	        if (daClass.equals("ReadNewspaper") || daClass.equals("ShowWebpage") || daClass.equals("Canned")){
-	            mode = Mode.VERBAL;
-	            modelTmp = createVerbal(dialogAct, arousal, valence, counter);
-	            addFacialExpr(modelTmp, dialogAct, "default");
-	        }
-	        
-	        if (daClass.equals("AskTask") || daClass.equals("AskTaskFollowUp")){
-	            mode = Mode.VERBAL;
-	            modelTmp = createVerbal(dialogAct, arousal, valence, counter);
-	            addFacialExpr(modelTmp, dialogAct, "smiley");
-	        }
-	        
-	        if (daClass.equals("SimpleMotivate")){
-	            mode = Mode.VERBAL;
-	            modelTmp = createVerbal(dialogAct, arousal, valence, counter);
-	            addFacialExpr(modelTmp, dialogAct, "smiley");
-	        }
-	                    
-	        if (modelTmp != null && mode != null) {
-	            addDA(modelTmp, mode, order);
-	        }
-        }    	
     }
 
     public void addDA(Model model, Mode mode, Integer order) {
@@ -523,7 +591,7 @@ public final class ModeSelection {
         return insObj;
 
     }
-    
+
     /*public Resource getWeather(Model model, String className) {
 
         Resource insObj = null;
@@ -539,7 +607,6 @@ public final class ModeSelection {
         return insObj;
 
     }*/
-
     public Resource getFalseTruthValueResource(Model model) {
 
         Resource insObj = null;
@@ -555,27 +622,32 @@ public final class ModeSelection {
 
     }
 
-    public void addCharacteristics(Model modelTmp, Resource dialogAct, String expressivity, String proximity, String attitude, String style, String social) {
-
-        //EXPRESSIVITY
-        Property hasExpressivity = modelTmp.getProperty(modeSelectionIRI + "#" + "hasExpressivity");
-        Literal expLiteral = modelTmp.createLiteral(expressivity);
-        modelTmp.addLiteral(dialogAct, hasExpressivity, expLiteral);
+    public void addCharacteristics(Model modelTmp, Resource dialogAct, String proximity, String style, String personality, String expressivity, String attitude, String social) {
 
         //PROXIMITY
         Property hasProximity = modelTmp.getProperty(modeSelectionIRI + "#" + "hasProximity");
         Literal proxLiteral = modelTmp.createLiteral(proximity);
         modelTmp.addLiteral(dialogAct, hasProximity, proxLiteral);
 
-        //ATTITUDE
-        Property hasAttitude = modelTmp.getProperty(modeSelectionIRI + "#" + "hasAttitude");
-        Literal attiLiteral = modelTmp.createLiteral(attitude);
-        modelTmp.addLiteral(dialogAct, hasAttitude, attiLiteral);
+        //PERSONALITY
+        Property hasPersonality = modelTmp.getProperty(modeSelectionIRI + "#" + "hasPersonality");
+        Literal persLiteral = modelTmp.createLiteral(personality);
+        modelTmp.addLiteral(dialogAct, hasPersonality, persLiteral);
 
         //STYLE
         Property hasStyle = modelTmp.getProperty(modeSelectionIRI + "#" + "hasStyle");
         Literal styleLiteral = modelTmp.createLiteral(style);
         modelTmp.addLiteral(dialogAct, hasStyle, styleLiteral);
+
+        //EXPRESSIVITY
+        Property hasExpressivity = modelTmp.getProperty(modeSelectionIRI + "#" + "hasExpressivity");
+        Literal expLiteral = modelTmp.createLiteral(expressivity);
+        modelTmp.addLiteral(dialogAct, hasExpressivity, expLiteral);
+
+        //ATTITUDE
+        Property hasAttitude = modelTmp.getProperty(modeSelectionIRI + "#" + "hasAttitude");
+        Literal attiLiteral = modelTmp.createLiteral(attitude);
+        modelTmp.addLiteral(dialogAct, hasAttitude, attiLiteral);
 
         //SOCIAL
         Property hasSocial = modelTmp.getProperty(modeSelectionIRI + "#" + "hasSocial");
@@ -589,7 +661,7 @@ public final class ModeSelection {
         Literal faceLiteral = modelTmp.createLiteral(facialExpr);
         modelTmp.addLiteral(dialogAct, FacialExpression, faceLiteral);
     }
-    
+
     public void addFacialIntention(Model modelTmp, Resource dialogAct, String facialInt) {
         //TARGETED WORD
         Property facialIntention = modelTmp.getProperty(modeSelectionIRI + "#" + "facialIntention");
@@ -615,9 +687,5 @@ public final class ModeSelection {
         Literal faceLiteral = modelTmp.createLiteral(facialExpr);
         modelTmp.addLiteral(dialogAct, FacialExpression, faceLiteral);
     }
-    
-    
-    
-    	
-    	
 }
+
