@@ -102,34 +102,19 @@ public final class ModeSelection {
                     A = defA;
                     V = defV;
                 }
-
-                //if (age >= 70){ //elder people
+                
                 if (country.equals("es") || country.equals("Turkey")) {
-                    kv = (float) 1.49;
+                    kv = (float) 1.5;
                     V = V * kv;
-                    ka = (float) 1.00;
+                    ka = 1;
                     A = A * ka;
                 }
                 if (country.equals("ge") || country.equals("Poland")) {
                     kv = (float) 1.25;
                     V = V * kv;
-                    ka = (float) 1.13;
+                    ka = (float) 0.80;
                     A = A * ka;
                 }
-                /*}if (age <= 40){
-                    if (country.equals("es")) {
-                        if (proximity.equals("close") && personality.equals("extroverted")) {
-                            addCharacteristics(modelTmp, dialogAct, "close","informal", "extroverted", "high", facExpr, "colloquial");
-                        }
-                    }
-                    if (country.equals("ge")) {
-                        if (proximity.equals("distant") && personality.equals("introverted")) {
-                             addCharacteristics(modelTmp, dialogAct, "proximity", "style", "personality", "expressivity", facExpr, "social");
-                        }
-                    }*/
-                //}
-                ///va aqui!!!!
-
             }
             if (daClass.equals("Thank") || daClass.equals("AnswerThank")) { // create verbal owl DA
 
@@ -147,21 +132,18 @@ public final class ModeSelection {
                     V = defV;
                 }
 
-                //modelTmp = createVerbal(dialogAct, A, V, counter);
-
                 facExpr = "grateful";
-                //addFacialExpr(modelTmp, dialogAct, facExpr);
                 
                 if (country.equals("es") || country.equals("Turkey")) {
-                    kv = (float) 1.35;
+                    kv = (float) 1.10;
                     V = V * kv;
-                    ka = (float) 0.96;
+                    ka = (float) 1.20;
                     A = A * ka;
                 }
                 if (country.equals("ge") || country.equals("Poland")) {
-                    kv = (float) 0.61;
+                    kv = (float) 1.10;
                     V = V * kv;
-                    ka = (float) 0.01;
+                    ka = (float) 0.80;
                     A = A * ka;
                 }
 
@@ -185,15 +167,15 @@ public final class ModeSelection {
                 facExpr = "apologetic";
                 
                 if (country.equals("es") || country.equals("Turkey")) {
-                    kv = (float) 2.06;
+                    kv = (float) 0.75;
                     V = V * kv;
-                    ka = (float) -0.24;
+                    ka = (float) 0.80;
                     A = A * ka;
                 }
                 if (country.equals("ge") || country.equals("Poland")) {
-                    kv = (float) 0.38;
+                    kv = (float) 1.20;
                     V = V * kv;
-                    ka = (float) 0.79;
+                    ka = (float) 1.00;
                     A = A * ka;
                 }
             }
@@ -215,87 +197,20 @@ public final class ModeSelection {
                 facExpr = "content";
                 
                 if (country.equals("es") || country.equals("Turkey")) {
-                    kv = (float) 1.67;
+                    kv = (float) 1.30;
                     V = V * kv;
-                    ka = (float) 0.39;
+                    ka = (float) 1.00;
                     A = A * ka;
                 }
                 if (country.equals("ge") || country.equals("Poland")) {
-                    kv = (float) 1.65;
+                    kv = (float) 1.00;
                     V = V * kv;
-                    ka = (float) 0.10;
+                    ka = (float) 0.75;
                     A = A * ka;
                 }
 
             }
-            if (daClass.equals("Declare")) {
-                mode = Mode.VERBAL;
-                //modelTmp = createVerbal(dialogAct, arousal, valence, counter);
-
-                //PORK
-                Resource Pork = getResourceByClass(modelTmp, "Pork");
-                if (Pork != null) {
-                    System.out.println("This is the instance of the class pork: " + Pork.toString());
-                    addFacialIntention(modelTmp, Pork, "apologetic");
-                }
-
-                //ALLERGY
-                Resource Allergy = getResourceByClass(modelTmp, "Allergy");
-                if (Allergy != null) {
-                    System.out.println("This is the instance of the class Allergy: " + Allergy.toString());
-                    addFacialIntention(modelTmp, Allergy, "worried");
-                }
-
-                //Swabian pokets
-                Resource SwabPockets = getResourceByClass(modelTmp, "SwabianPockets");
-                if (SwabPockets != null) {
-                    System.out.println("This is the instance of the class Swabian Pockets: " + SwabPockets.toString());
-                    if (country.equals("ge")) {
-                        facExpr = "joyful";
-                        //addFacialExpr(modelTmp, dialogAct, "smiley");
-                        //canviem dialogAct per classInsRes:
-                        //addFacialExpr(modelTmp, SwabPockets, "smiley");
-                        //addFacialIntensity(modelTmp, SwabPockets, "high");
-                        kv = (float) 1.67;
-                        V = valence * kv;
-                        ka = (float) 0.39;
-                        A = arousal * ka;
-                    } else {
-                        //addFacialExpr(modelTmp, dialogAct, "smiley");
-                        //addFacialIntensity(modelTmp, dialogAct, "low");
-                        facExpr = "neutral";
-                        kv = (float) 1.67;
-                        V = valence * kv;
-                        ka = (float) 0.39;
-                        A = arousal * ka; 
-                    }
-                }
-                /*Resource falseTruthValueRes = getFalseTruthValueResource(modelTmp);
-                if (Pork != null || SwabPockets != null) {
-                    System.out.println("This is the instance whose truth value is false: " + falseTruthValueRes.toString());
-                    addYesNoFacialExpr(modelTmp, dialogAct, "apologetic");
-                }*/
-            }
-            /*if (daClass.equals("ShowWeather")){
-                mode = Mode.VERBAL;
-                modelTmp = createVerbal(dialogAct, arousal, valence, counter);
-                //WEATHER
-                Resource Cold = getWeather(modelTmp, "cold");
-                if (Cold != null) {
-                    System.out.println("This is the instance of the class cold: " + Cold.toString());
-                    addFacialExpr(modelTmp, Cold, "neutral");
-                    //addFacialIntensity(modelTmp, Cold, "high");
-                }
-                Resource hot = getWeather(modelTmp, "hot");
-                if (hot != null) {
-                    System.out.println("This is the instance of the class cold: " + Cold.toString());
-                    addFacialExpr(modelTmp, hot, "smiley");
-                    addFaceEnthusiasm(modelTmp, hot, "high");
-                }
-                
-            }*/
-
-            if (daClass.equals("ReadNewspaper") || daClass.equals("ShowWebpage") ) {
+            if (daClass.equals("ReadNewspaper") || daClass.equals("ShowWebpage") || daClass.equals("Canned") ) {
                 mode = Mode.VERBAL;
                 defV = (float) 0.75;
                 defA = (float) 0.48;
@@ -312,15 +227,15 @@ public final class ModeSelection {
                 facExpr = "enthusiastic";
                 
                 if (country.equals("es") || country.equals("Turkey")) {
-                    kv = (float) 1.00;
+                    kv = (float) 1.50;
                     V = V * kv;
-                    ka = (float) 1.33;
+                    ka = (float) 1.00;
                     A = A * ka;
                 }
                 if (country.equals("ge") || country.equals("Poland")) {
-                    kv = (float) 0.97;
+                    kv = (float) 1.25;
                     V = V * kv;
-                    ka = (float) 0.81;
+                    ka = (float) 0.75;
                     A = A * ka;
                 }
             }
@@ -342,15 +257,15 @@ public final class ModeSelection {
                 facExpr = "curious";
                 
                 if (country.equals("es") || country.equals("Turkey")) {
-                    kv = (float) 0.65;
+                    kv = (float) 1.30;
                     V = V * kv;
-                    ka = (float) 0.88;
+                    ka = (float) 1.00;
                     A = A * ka;
                 }
                 if (country.equals("ge") || country.equals("Poland")) {
-                    kv = (float) 0.58;
+                    kv = (float) 1.00;
                     V = V * kv;
-                    ka = (float) 0.58;
+                    ka = (float) 0.75;
                     A = A * ka;
                 }
             }
@@ -372,9 +287,9 @@ public final class ModeSelection {
                 facExpr = "caring";
                 
                 if (country.equals("es") || country.equals("Turkey")) {
-                    kv = (float) 1.39;
+                    kv = (float) 0.8;
                     V = V * kv;
-                    ka = (float) 0.21;
+                    ka = (float) 1.00;
                     A = A * ka;
                 }
                 if (country.equals("ge") || country.equals("Poland")) {
@@ -401,13 +316,13 @@ public final class ModeSelection {
                 facExpr = "relaxed";
                 
                 if (country.equals("es") || country.equals("Turkey")) {
-                    kv = (float) 1.02;
+                    kv = (float) 1.50;
                     V = V * kv;
                     ka = (float) 1.00;
                     A = A * ka;
                 }
                 if (country.equals("ge") || country.equals("Poland")) {
-                    kv = (float) 1.22;
+                    kv = (float) 1.25;
                     V = V * kv;
                     ka = (float) 1.00;
                     A = A * ka;
@@ -430,19 +345,73 @@ public final class ModeSelection {
                 facExpr = "serious";
                 
                 if (country.equals("es") || country.equals("Turkey")) {
-                    kv = (float) 2.14;
+                    kv = (float) 3.00;
                     V = V * kv;
-                    ka = (float) 6.50;
+                    ka = (float) 1.00;
                     A = A * ka;
                 }
                 if (country.equals("ge") || country.equals("Poland")) {
-                    kv = (float) 1.00;
+                    kv = (float) 1.50;
                     V = V * kv;
-                    ka = (float) -7.50;
+                    ka = (float) 1.00;
                     A = A * ka;
                 }
             }
             
+            if (daClass.equals("Declare")) {
+                mode = Mode.VERBAL;
+                modelTmp = createVerbal(dialogAct, arousal, valence, counter);
+
+                //PORK
+                Resource Pork = getResourceByClass(modelTmp, "Pork");
+                if (Pork != null) {
+                    System.out.println("This is the instance of the class pork: " + Pork.toString());
+                    addFacialIntention(modelTmp, Pork, "apologetic");
+                }
+
+                //ALLERGY
+                Resource Allergy = getResourceByClass(modelTmp, "Allergy");
+                if (Allergy != null) {
+                    System.out.println("This is the instance of the class Allergy: " + Allergy.toString());
+                    addFacialIntention(modelTmp, Allergy, "worried");
+                }
+
+                //Swabian pokets
+                Resource SwabPockets = getResourceByClass(modelTmp, "SwabianPockets");
+                if (SwabPockets != null) {
+                    System.out.println("This is the instance of the class Swabian Pockets: " + SwabPockets.toString());
+                    if (country.equals("ge")) {
+                        //addFacialExpr(modelTmp, dialogAct, "smiley");
+                        //canviem dialogAct per classInsRes:
+                        addFacialExpr(modelTmp, SwabPockets, "smiley");
+                        addFacialIntensity(modelTmp, SwabPockets, "high");
+                    } else {
+                        addFacialExpr(modelTmp, dialogAct, "smiley");
+                        addFacialIntensity(modelTmp, dialogAct, "low");
+                    }
+                }
+                
+                //weather
+                /*if (daClass.equals("ShowWeather")){
+                mode = Mode.VERBAL;
+                modelTmp = createVerbal(dialogAct, arousal, valence, counter);
+                //WEATHER
+                Resource Cold = getWeather(modelTmp, "cold");
+                    if (Cold != null) {
+                        System.out.println("This is the instance of the class cold: " + Cold.toString());
+                        addFacialExpr(modelTmp, Cold, "neutral");
+                        //addFacialIntensity(modelTmp, Cold, "high");
+                    }
+                    Resource hot = getWeather(modelTmp, "hot");
+                    if (hot != null) {
+                        System.out.println("This is the instance of the class cold: " + Cold.toString());
+                        addFacialExpr(modelTmp, hot, "smiley");
+                        addFaceEnthusiasm(modelTmp, hot, "high");
+                    }
+                
+                }*/
+                
+            }
             modelTmp = createVerbal(dialogAct, A, V, counter);
            
             addFacialExpr(modelTmp, dialogAct, facExpr);
@@ -550,13 +519,6 @@ public final class ModeSelection {
         Literal vLiteral = modelTmp.createTypedLiteral(valence);
         modelTmp.addLiteral(actionObj, hasValence, vLiteral);
         modelTmp.add(actionObj, containsSystemAct, da);
-        /*
-        //EXPRESSIVITY (copied from non verbal)
-        Property hasExpressivity = modelTmp.getProperty(modeSelectionIRI + "#" + "hasExpressivity");
-        Literal expLiteral = modelTmp.createLiteral("very expressive");
-        da.addLiteral(hasExpressivity, expLiteral);
-         */
-
         return modelTmp;
 
     }
@@ -688,4 +650,3 @@ public final class ModeSelection {
         modelTmp.addLiteral(dialogAct, FacialExpression, faceLiteral);
     }
 }
-
