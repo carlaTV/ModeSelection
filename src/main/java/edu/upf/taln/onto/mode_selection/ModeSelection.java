@@ -1,652 +1,466 @@
 package edu.upf.taln.onto.mode_selection;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-import java.io.ByteArrayOutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-import com.hp.hpl.jena.rdf.model.*;
 import java.io.File;
-import org.apache.commons.configuration.ConfigurationException;
+import java.util.Map;
+import java.util.Set;
 
-public final class ModeSelection {
+import org.apache.commons.io.FileUtils;
 
-    static String dialogueIRI = "http://kristina-project.eu/ontologies/dialogue_actions";
-    static String modeSelectionIRI = "http://kristina-project.eu/ontologies/mode_selection";
-    static String ontoIRI = "http://kristina-project.eu/ontologies/la/onto";
-    static String contextIRI = "http://kristina-project.eu/ontologies/la/context";
-    static String baseIRI = "http://kristina-project.eu/ms";
-    static int counter = 0;
+/**
+ *
+ * @author rcarlini
+ */
+public class ModeSelectionTest {
 
-    static String iniFilePath = "src/main/resources/";
-
-    public static void setIniFilePath(String ontoIniDirectory) {
-        iniFilePath = ontoIniDirectory;
+    public ModeSelectionTest() {
     }
 
-    Map<Integer, String> verbalDialogueElements = new HashMap<>();
-    Map<Integer, String> nonVerbalDialogueElements = new HashMap<>();
+    @Test
+    public void testGreet() throws Exception {
 
-    enum Mode {
+        String str = FileUtils.readFileToString(new File("src/test/resources/dm-output-greet.rdf"));    	
 
-        VERBAL, NON_VERBAL
-    };
+        UserProfileIni profile = new UserProfileIni(new File("src/test/resources/young_german.ini"));
+        
+        ModeSelection mdParser = new ModeSelection(str, profile);
 
-    public static UserProfileIni loadProfile(String language, String scenario) throws ConfigurationException {
+        Set<Integer> keys;
+        Map<Integer, String> tmp;
 
-        File profileFile = new File(iniFilePath + "proto2_ms_profile_" + scenario + "_" + language + ".ini");
-        if (!profileFile.exists()) {
-            profileFile = new File(iniFilePath + "default_profile.ini");
-        }
-        return new UserProfileIni(profileFile);
-    }
-
-    public ModeSelection(String owlStr, UserProfileIni profile) throws CustomException, UnsupportedEncodingException {
-
-        SystemAction sa = new SystemAction(owlStr);
-
-        processResponses(sa, profile);
-    }
-
-    private void processResponses(SystemAction systemAction, UserProfileIni profile) throws CustomException {
-
-        float valence = systemAction.getValence();
-        float arousal = systemAction.getArousal();
-        float defV;
-        float defA;
-        float V = 0;
-        float A = 0;
-
-        float ka = 0;
-        float kv = 0;
-
-        String facExpr = null;
-
-        List<Resource> dialogActs = systemAction.getDialogActs();
-
-        //identity
-        String gender = profile.getGender();
-        int age = profile.getAge();
-        //culture
-        String country = profile.getCountry();
-        //personality
-        String proximity = profile.getProximity();
-        String personality = profile.getPersonality();
-
-        // process the read DAs in order to assign them to verbal vs non-verbal output and add respective mode-selection tags		
-        for (int order = 0; order < dialogActs.size(); order++) {
-
-            Resource dialogAct = dialogActs.get(order);
-
-            String daClass = systemAction.getClass(dialogAct); // get the type of the DA instance
-            System.out.println(order + " DA is " + daClass);
-
-            Mode mode = null;
-            Model modelTmp = null;
-
-            if (daClass.equals("PersonalGreet") || daClass.equals("SimpleGreet")) { // create verbal owl DA
-                mode = Mode.VERBAL;
-                
-                facExpr = "joyful";
-                defV = (float) 0.67;
-                defA = (float) 0.32;
-
-                if (defV < valence) {
-                    A = defA;
-                    V = valence;
-
-                } else {
-                    A = defA;
-                    V = defV;
-                }
-                
-                if (country.equals("es") || country.equals("tr")) {
-                    kv = (float) 1.5;
-                    V = V * kv;
-                    ka = 1;
-                    A = A * ka;
-                }
-                if (country.equals("ge") || country.equals("pl")) {
-                    kv = (float) 1.25;
-                    V = V * kv;
-                    ka = (float) 0.80;
-                    A = A * ka;
-                }
-            }
-            if (daClass.equals("Thank") || daClass.equals("AnswerThank")) { // create verbal owl DA
-
-                mode = Mode.VERBAL;
-
-                defV = (float) 0.68;
-                defA = (float) 0.27;
-
-                if (defV < valence) {
-                    A = defA;
-                    V = valence;
-
-                } else {
-                    A = defA;
-                    V = defV;
-                }
-
-                facExpr = "grateful";
-                
-                if (country.equals("es") || country.equals("tr")) {
-                    kv = (float) 1.10;
-                    V = V * kv;
-                    ka = (float) 1.20;
-                    A = A * ka;
-                }
-                if (country.equals("ge") || country.equals("pl")) {
-                    kv = (float) 1.10;
-                    V = V * kv;
-                    ka = (float) 0.80;
-                    A = A * ka;
-                }
-
-            }
-            if (daClass.equals("Apologise")) { // create verbal owl DA
-
-                mode = Mode.VERBAL;
-
-                defV = (float) -0.16;
-                defA = (float) -0.29;
-
-                if (defV < valence) {
-                    A = defA;
-                    V = valence;
-
-                } else {
-                    A = defA;
-                    V = defV;
-                }
-
-                facExpr = "apologetic";
-                
-                if (country.equals("es") || country.equals("tr")) {
-                    kv = (float) 0.75;
-                    V = V * kv;
-                    ka = (float) 0.80;
-                    A = A * ka;
-                }
-                if (country.equals("ge") || country.equals("pl")) {
-                    kv = (float) 1.20;
-                    V = V * kv;
-                    ka = (float) 1.00;
-                    A = A * ka;
-                }
-            }
-            if (daClass.equals("GoodBye") || daClass.equals("SayGoodBye")) { // create verbal owl DA
-                mode = Mode.VERBAL;
-
-                defV = (float) 0.54;
-                defA = (float) 0.59;
-
-                if (defV < valence) {
-                    A = defA;
-                    V = valence;
-
-                } else {
-                    A = defA;
-                    V = defV;
-                }
-                
-                facExpr = "content";
-                
-                if (country.equals("es") || country.equals("tr")) {
-                    kv = (float) 1.30;
-                    V = V * kv;
-                    ka = (float) 1.00;
-                    A = A * ka;
-                }
-                if (country.equals("ge") || country.equals("pl")) {
-                    kv = (float) 1.00;
-                    V = V * kv;
-                    ka = (float) 0.75;
-                    A = A * ka;
-                }
-
-            }
-            if (daClass.equals("ReadNewspaper") || daClass.equals("ShowWebpage") || daClass.equals("Canned") ) {
-                mode = Mode.VERBAL;
-                defV = (float) 0.75;
-                defA = (float) 0.48;
-
-                if (defV < valence) {
-                    A = defA;
-                    V = valence;
-
-                } else {
-                    A = defA;
-                    V = defV;
-                }
-
-                facExpr = "enthusiastic";
-                
-                if (country.equals("es") || country.equals("tr")) {
-                    kv = (float) 1.50;
-                    V = V * kv;
-                    ka = (float) 1.00;
-                    A = A * ka;
-                }
-                if (country.equals("ge") || country.equals("pl")) {
-                    kv = (float) 1.25;
-                    V = V * kv;
-                    ka = (float) 0.75;
-                    A = A * ka;
-                }
-            }
-
-            if (daClass.equals("AskTask") || daClass.equals("AskTaskFollowUp")) {
-                mode = Mode.VERBAL;
-                defV = (float) 0.40;
-                defA = (float) 0.60;
-
-                if (defV < valence) {
-                    A = defA;
-                    V = valence;
-
-                } else {
-                    A = defA;
-                    V = defV;
-                }
-                
-                facExpr = "curious";
-                
-                if (country.equals("es") || country.equals("tr")) {
-                    kv = (float) 1.30;
-                    V = V * kv;
-                    ka = (float) 1.00;
-                    A = A * ka;
-                }
-                if (country.equals("ge") || country.equals("pl")) {
-                    kv = (float) 1.00;
-                    V = V * kv;
-                    ka = (float) 0.75;
-                    A = A * ka;
-                }
-            }
-
-            if (daClass.equals("CalmDown")) {
-                mode = Mode.VERBAL;
-                defV = (float) 0.70;
-                defA = (float) -0.14;
-
-                if (defV < valence) {
-                    A = defA;
-                    V = valence;
-
-                } else {
-                    A = defA;
-                    V = defV;
-                }
-                
-                facExpr = "caring";
-                
-                if (country.equals("es") || country.equals("tr")) {
-                    kv = (float) 0.8;
-                    V = V * kv;
-                    ka = (float) 1.00;
-                    A = A * ka;
-                }
-                if (country.equals("ge") || country.equals("pl")) {
-                    kv = (float) 1.00;
-                    V = V * kv;
-                    ka = (float) 1.20;
-                    A = A * ka;
-                }
-            }
-            if (daClass.equals("Ack")) {
-                mode = Mode.VERBAL;
-                defV = (float) 0.51;
-                defA = (float) 0.00;
-
-                if (defV < valence) {
-                    A = defA;
-                    V = valence;
-
-                } else {
-                    A = defA;
-                    V = defV;
-                }
-                
-                facExpr = "relaxed";
-                
-                if (country.equals("es") || country.equals("tr")) {
-                    kv = (float) 1.50;
-                    V = V * kv;
-                    ka = (float) 1.00;
-                    A = A * ka;
-                }
-                if (country.equals("ge") || country.equals("pl")) {
-                    kv = (float) 1.25;
-                    V = V * kv;
-                    ka = (float) 1.00;
-                    A = A * ka;
-                }
-            }
-            if (daClass.equals("Reject")) {
-                mode = Mode.VERBAL;
-                defV = (float) 0.07;
-                defA = (float) 0.02;
-
-                if (defV < valence) {
-                    A = defA;
-                    V = valence;
-
-                } else {
-                    A = defA;
-                    V = defV;
-                }
-                
-                facExpr = "serious";
-                
-                if (country.equals("es") || country.equals("tr")) {
-                    kv = (float) 3.00;
-                    V = V * kv;
-                    ka = (float) 1.00;
-                    A = A * ka;
-                }
-                if (country.equals("ge") || country.equals("pl")) {
-                    kv = (float) 1.50;
-                    V = V * kv;
-                    ka = (float) 1.00;
-                    A = A * ka;
-                }
-            }
-            
-            if (daClass.equals("Declare")) {
-                mode = Mode.VERBAL;
-                modelTmp = createVerbal(dialogAct, arousal, valence, counter);
-
-                //PORK
-                Resource Pork = getResourceByClass(modelTmp, "Pork");
-                if (Pork != null) {
-                    System.out.println("This is the instance of the class pork: " + Pork.toString());
-                    addFacialIntention(modelTmp, Pork, "apologetic");
-                }
-
-                //ALLERGY
-                Resource Allergy = getResourceByClass(modelTmp, "Allergy");
-                if (Allergy != null) {
-                    System.out.println("This is the instance of the class Allergy: " + Allergy.toString());
-                    addFacialIntention(modelTmp, Allergy, "worried");
-                }
-
-                //Swabian pokets
-                Resource SwabPockets = getResourceByClass(modelTmp, "SwabianPockets");
-                if (SwabPockets != null) {
-                    System.out.println("This is the instance of the class Swabian Pockets: " + SwabPockets.toString());
-                    if (country.equals("ge")) {
-                        //addFacialExpr(modelTmp, dialogAct, "smiley");
-                        //canviem dialogAct per classInsRes:
-                        addFacialExpr(modelTmp, SwabPockets, "smiley");
-                        addFacialIntensity(modelTmp, SwabPockets, "high");
-                    } else {
-                        addFacialExpr(modelTmp, dialogAct, "smiley");
-                        addFacialIntensity(modelTmp, dialogAct, "low");
-                    }
-                }
-                
-                //weather
-                /*if (daClass.equals("ShowWeather")){
-                mode = Mode.VERBAL;
-                modelTmp = createVerbal(dialogAct, arousal, valence, counter);
-                //WEATHER
-                Resource Cold = getWeather(modelTmp, "cold");
-                    if (Cold != null) {
-                        System.out.println("This is the instance of the class cold: " + Cold.toString());
-                        addFacialExpr(modelTmp, Cold, "neutral");
-                        //addFacialIntensity(modelTmp, Cold, "high");
-                    }
-                    Resource hot = getWeather(modelTmp, "hot");
-                    if (hot != null) {
-                        System.out.println("This is the instance of the class cold: " + Cold.toString());
-                        addFacialExpr(modelTmp, hot, "smiley");
-                        addFaceEnthusiasm(modelTmp, hot, "high");
-                    }
-                
-                }*/
-                
-            }
-            modelTmp = createVerbal(dialogAct, A, V, counter);
-           
-            addFacialExpr(modelTmp, dialogAct, facExpr);
-
-            if (V > 0 && kv > 1) {
-                if (kv > 1) {
-                    if (ka > 1) {
-                        //CASE 1
-                        //modelTmp, dialogAct, "proximity", "style", "personality", "expressivity", facExpr, "social"
-                        addCharacteristics(modelTmp, dialogAct, "close", "informal", "extroverted", "high", facExpr, "colloquial");  
-                    } else {
-                        //CASE 2
-                        addCharacteristics(modelTmp, dialogAct, "close", "informal", "introverted", "medium", facExpr, "heartly");
-                    }
-                }if (kv <= 1){
-                    if(ka > 1){
-                        //CASE 3
-                        addCharacteristics(modelTmp, dialogAct, "distant", "formal", "extroverted", "medium", facExpr, "heartly");
-                    }else{
-                        //CASE 4
-                        addCharacteristics(modelTmp, dialogAct, "distant", "formal", "introverted", "low", facExpr, "reserved");
-                    }
-                }
-            }
-
-            if (modelTmp != null && mode != null) {
-                addDA(modelTmp, mode, order);
-            }
+        System.out.println("---------------- nonVerbal: ");
+        tmp = mdParser.getNonVerbalDialogueElements();
+        keys = tmp.keySet();
+        for (Integer key : keys) {
+            System.out.println(key + " " + tmp.get(key));
         }
 
-    }
-
-    public void addDA(Model model, Mode mode, Integer order) {
-
-        ByteArrayOutputStream nonVerbalStream = new ByteArrayOutputStream();
-        model.write(nonVerbalStream, "RDF/XML");
-        String owlStr = nonVerbalStream.toString();
-
-        if (mode == Mode.NON_VERBAL) {
-            nonVerbalDialogueElements.put(order, owlStr);
-        } else { // 
-            verbalDialogueElements.put(order, owlStr);
+        System.out.println("----------------- verbal: ");
+        tmp = mdParser.getVerbalDialogueElements();
+        keys = tmp.keySet();
+        for (Integer key : keys) {
+            System.out.println(key + " " + tmp.get(key));
+            //System.out.println(tmp.get(key));
         }
-        model.close();
-
     }
+    
+    @Test
+    public void testApologize() throws Exception {
 
-    private Model createNonVerbal(int order, float arousal, float valence, String responseCls, int counter) {
+        String str = FileUtils.readFileToString(new File("src/test/resources/dm-output-apologize.rdf"));    	
 
-        Model modelTmp = ModelFactory.createDefaultModel();
-        Property rdfType = modelTmp.getProperty("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
-        Property hasOrder = modelTmp.createProperty(dialogueIRI + "#" + "hasOrder");
-        Property hasArousal = modelTmp.createProperty(dialogueIRI + "#" + "hasArousal");
-        Property hasValence = modelTmp.createProperty(dialogueIRI + "#" + "hasValence");
+        UserProfileIni profile = new UserProfileIni(new File("src/test/resources/young_german.ini"));
+        
+        ModeSelection mdParser = new ModeSelection(str, profile);
 
-        Resource daRes = modelTmp.createResource(baseIRI + "ins" + counter++);
-        Resource daCls = modelTmp.createResource(dialogueIRI + "#" + responseCls);
-        daRes.addProperty(rdfType, daCls);
+        Set<Integer> keys;
+        Map<Integer, String> tmp;
 
-        Literal aLiteral = modelTmp.createTypedLiteral(arousal);
-        daRes.addLiteral(hasArousal, aLiteral);
-        Literal vLiteral = modelTmp.createTypedLiteral(valence);
-        daRes.addLiteral(hasValence, vLiteral);
-        Literal oLiteral = modelTmp.createTypedLiteral(order);
-        daRes.addLiteral(hasOrder, oLiteral);
-
-        Property hasExpressivity = modelTmp.getProperty(modeSelectionIRI + "#" + "hasExpressivity");
-        Literal expLiteral = modelTmp.createLiteral("very expressive");
-        daRes.addLiteral(hasExpressivity, expLiteral);
-
-        return modelTmp;
-    }
-
-    private Model createVerbal(Resource da, float arousal, float valence, int counter) {
-
-        Model modelTmp = ModelFactory.createDefaultModel();
-
-        StmtIterator iter = da.listProperties();
-        while (iter.hasNext()) {
-            Statement stmt = iter.nextStatement();
-
-            if (!"followedBy".equals(removePrefix(stmt.getPredicate().toString()))) {
-                modelTmp.add(stmt);
-                if ("containsSemantics".equals(removePrefix(stmt.getPredicate().toString()))) {
-                    StmtIterator reifiedIter = stmt.getObject().asResource().listProperties();
-                    while (reifiedIter.hasNext()) {
-                        modelTmp.add(reifiedIter.nextStatement());
-                    }
-                }
-            }
+        System.out.println("---------------- nonVerbal: ");
+        tmp = mdParser.getNonVerbalDialogueElements();
+        keys = tmp.keySet();
+        for (Integer key : keys) {
+            System.out.println(key + " " + tmp.get(key));
         }
 
-        Property rdfType = modelTmp.getProperty("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
-        Property hasOrder = modelTmp.createProperty(dialogueIRI + "#" + "hasOrder");
-        Property hasArousal = modelTmp.createProperty(dialogueIRI + "#" + "hasArousal");
-        Property hasValence = modelTmp.createProperty(dialogueIRI + "#" + "hasValence");
-        Property containsSystemAct = modelTmp.createProperty(dialogueIRI + "#" + "containsSystemAct");
-
-        Resource actionObj = modelTmp.createResource(baseIRI + "ins" + counter++);
-        Resource systemActionClass = modelTmp.createResource(dialogueIRI + "#" + "SystemAction"); // to facilitate parsing (recognition of DA object) in OntoDialogueAct
-        modelTmp.add(actionObj, rdfType, systemActionClass);
-
-        Literal aLiteral = modelTmp.createTypedLiteral(arousal);
-        modelTmp.addLiteral(actionObj, hasArousal, aLiteral);
-        Literal vLiteral = modelTmp.createTypedLiteral(valence);
-        modelTmp.addLiteral(actionObj, hasValence, vLiteral);
-        modelTmp.add(actionObj, containsSystemAct, da);
-        return modelTmp;
-
+        System.out.println("----------------- verbal: ");
+        tmp = mdParser.getVerbalDialogueElements();
+        keys = tmp.keySet();
+        for (Integer key : keys) {
+            System.out.println(key + " " + tmp.get(key));
+            //System.out.println(tmp.get(key));
+        }
     }
+    
+    @Test
+    public void testThank() throws Exception {
 
-    public String decode(String str) throws UnsupportedEncodingException {
-        return URLDecoder.decode(str, "UTF-8");
-    }
+        String str = FileUtils.readFileToString(new File("src/test/resources/dm-output-thank.rdf"));    	
 
-    public Map<Integer, String> getVerbalDialogueElements() {
-        return verbalDialogueElements;
-    }
+        UserProfileIni profile = new UserProfileIni(new File("src/test/resources/user_profile.ini"));
+        
+        ModeSelection mdParser = new ModeSelection(str, profile);
 
-    public Map<Integer, String> getNonVerbalDialogueElements() {
-        return nonVerbalDialogueElements;
-    }
+        Set<Integer> keys;
+        Map<Integer, String> tmp;
 
-    public String removePrefix(String uri) {
-        return uri.substring(uri.lastIndexOf('#') + 1);
-    }
-
-    public Resource getResourceByClass(Model model, String className) {
-
-        Resource insObj = null;
-        RSIterator iter = model.listReifiedStatements();
-        while (iter.hasNext()) {
-            ReifiedStatement stmt = iter.nextRS();
-            if (stmt.getStatement().getObject().toString().equals(ontoIRI + "#" + className)) {
-                insObj = stmt.getStatement().getSubject();
-            }
+        System.out.println("---------------- nonVerbal: ");
+        tmp = mdParser.getNonVerbalDialogueElements();
+        keys = tmp.keySet();
+        for (Integer key : keys) {
+            System.out.println(key + " " + tmp.get(key));
         }
 
-        return insObj;
-
+        System.out.println("----------------- verbal: ");
+        tmp = mdParser.getVerbalDialogueElements();
+        keys = tmp.keySet();
+        for (Integer key : keys) {
+            System.out.println(key + " " + tmp.get(key));
+            //System.out.println(tmp.get(key));
+        }
     }
+    
+    @Test
+    public void testGoodBye() throws Exception {
 
-    /*public Resource getWeather(Model model, String className) {
+        String str = FileUtils.readFileToString(new File("src/test/resources/dm-output-GoodBye.rdf"));    	
 
-        Resource insObj = null;
-        RSIterator iter = model.listReifiedStatements();
-        while (iter.hasNext()) {
-            ReifiedStatement stmt = iter.nextRS();
-            if (stmt.getStatement().getObject().toString().equals(ontoIRI + "#weatherClassification&gt;&#xD;\n" +
-            "\\\"" + className)) {
-                insObj = stmt.getStatement().getSubject();
-            }
+        UserProfileIni profile = new UserProfileIni(new File("src/test/resources/user_profile.ini"));
+        
+        ModeSelection mdParser = new ModeSelection(str, profile);
+
+        Set<Integer> keys;
+        Map<Integer, String> tmp;
+
+        System.out.println("---------------- nonVerbal: ");
+        tmp = mdParser.getNonVerbalDialogueElements();
+        keys = tmp.keySet();
+        for (Integer key : keys) {
+            System.out.println(key + " " + tmp.get(key));
         }
 
-        return insObj;
+        System.out.println("----------------- verbal: ");
+        tmp = mdParser.getVerbalDialogueElements();
+        keys = tmp.keySet();
+        for (Integer key : keys) {
+            System.out.println(key + " " + tmp.get(key));
+            //System.out.println(tmp.get(key));
+        }
+    }
+    
+    @Test
+    public void testAskTask() throws Exception {
 
-    }*/
-    public Resource getFalseTruthValueResource(Model model) {
+        String str = FileUtils.readFileToString(new File("src/test/resources/dm-output-AskTask.rdf"));    	
 
-        Resource insObj = null;
-        RSIterator iter = model.listReifiedStatements();
-        while (iter.hasNext()) {
-            ReifiedStatement stmt = iter.nextRS();
-            if (stmt.getStatement().getPredicate().toString().equals(contextIRI + "#" + "hasTruthValue")) {
-                insObj = stmt.getStatement().getSubject();
-            }
+        UserProfileIni profile = new UserProfileIni(new File("src/test/resources/user_profile.ini"));
+        
+        ModeSelection mdParser = new ModeSelection(str, profile);
+
+        Set<Integer> keys;
+        Map<Integer, String> tmp;
+
+        System.out.println("---------------- nonVerbal: ");
+        tmp = mdParser.getNonVerbalDialogueElements();
+        keys = tmp.keySet();
+        for (Integer key : keys) {
+            System.out.println(key + " " + tmp.get(key));
         }
 
-        return insObj;
-
+        System.out.println("----------------- verbal: ");
+        tmp = mdParser.getVerbalDialogueElements();
+        keys = tmp.keySet();
+        for (Integer key : keys) {
+            System.out.println(key + " " + tmp.get(key));
+            //System.out.println(tmp.get(key));
+        }
     }
+    
+    @Test
+    public void testCalmDown() throws Exception {
 
-    public void addCharacteristics(Model modelTmp, Resource dialogAct, String proximity, String style, String personality, String expressivity, String attitude, String social) {
+        String str = FileUtils.readFileToString(new File("src/test/resources/dm-output-CalmDown.rdf"));    	
 
-        //PROXIMITY
-        Property hasProximity = modelTmp.getProperty(modeSelectionIRI + "#" + "hasProximity");
-        Literal proxLiteral = modelTmp.createLiteral(proximity);
-        modelTmp.addLiteral(dialogAct, hasProximity, proxLiteral);
+        UserProfileIni profile = new UserProfileIni(new File("src/test/resources/user_profile.ini"));
+        
+        ModeSelection mdParser = new ModeSelection(str, profile);
 
-        //PERSONALITY
-        Property hasPersonality = modelTmp.getProperty(modeSelectionIRI + "#" + "hasPersonality");
-        Literal persLiteral = modelTmp.createLiteral(personality);
-        modelTmp.addLiteral(dialogAct, hasPersonality, persLiteral);
+        Set<Integer> keys;
+        Map<Integer, String> tmp;
 
-        //STYLE
-        Property hasStyle = modelTmp.getProperty(modeSelectionIRI + "#" + "hasStyle");
-        Literal styleLiteral = modelTmp.createLiteral(style);
-        modelTmp.addLiteral(dialogAct, hasStyle, styleLiteral);
+        System.out.println("---------------- nonVerbal: ");
+        tmp = mdParser.getNonVerbalDialogueElements();
+        keys = tmp.keySet();
+        for (Integer key : keys) {
+            System.out.println(key + " " + tmp.get(key));
+        }
 
-        //EXPRESSIVITY
-        Property hasExpressivity = modelTmp.getProperty(modeSelectionIRI + "#" + "hasExpressivity");
-        Literal expLiteral = modelTmp.createLiteral(expressivity);
-        modelTmp.addLiteral(dialogAct, hasExpressivity, expLiteral);
-
-        //ATTITUDE
-        Property hasAttitude = modelTmp.getProperty(modeSelectionIRI + "#" + "hasAttitude");
-        Literal attiLiteral = modelTmp.createLiteral(attitude);
-        modelTmp.addLiteral(dialogAct, hasAttitude, attiLiteral);
-
-        //SOCIAL
-        Property hasSocial = modelTmp.getProperty(modeSelectionIRI + "#" + "hasSocial");
-        Literal socLiteral = modelTmp.createLiteral(social);
-        modelTmp.addLiteral(dialogAct, hasSocial, socLiteral);
+        System.out.println("----------------- verbal: ");
+        tmp = mdParser.getVerbalDialogueElements();
+        keys = tmp.keySet();
+        for (Integer key : keys) {
+            System.out.println(key + " " + tmp.get(key));
+            //System.out.println(tmp.get(key));
+        }
     }
+    
+    @Test
+    public void testAck() throws Exception {
 
-    public void addFacialExpr(Model modelTmp, Resource dialogAct, String facialExpr) {
-        //TARGETED WORD
-        Property FacialExpression = modelTmp.getProperty(modeSelectionIRI + "#" + "FacialExpression");
-        Literal faceLiteral = modelTmp.createLiteral(facialExpr);
-        modelTmp.addLiteral(dialogAct, FacialExpression, faceLiteral);
+        String str = FileUtils.readFileToString(new File("src/test/resources/dm-output-Ack.rdf"));    	
+
+        UserProfileIni profile = new UserProfileIni(new File("src/test/resources/user_profile.ini"));
+        
+        ModeSelection mdParser = new ModeSelection(str, profile);
+
+        Set<Integer> keys;
+        Map<Integer, String> tmp;
+
+        System.out.println("---------------- nonVerbal: ");
+        tmp = mdParser.getNonVerbalDialogueElements();
+        keys = tmp.keySet();
+        for (Integer key : keys) {
+            System.out.println(key + " " + tmp.get(key));
+        }
+
+        System.out.println("----------------- verbal: ");
+        tmp = mdParser.getVerbalDialogueElements();
+        keys = tmp.keySet();
+        for (Integer key : keys) {
+            System.out.println(key + " " + tmp.get(key));
+            //System.out.println(tmp.get(key));
+        }
     }
+    
+    @Test
+    public void testReject() throws Exception {
 
-    public void addFacialIntention(Model modelTmp, Resource dialogAct, String facialInt) {
-        //TARGETED WORD
-        Property facialIntention = modelTmp.getProperty(modeSelectionIRI + "#" + "facialIntention");
-        Literal intentionLiteral = modelTmp.createLiteral(facialInt);
-        modelTmp.addLiteral(dialogAct, facialIntention, intentionLiteral);
+        //String str = FileUtils.readFileToString(new File("src/test/resources/dm-output-Reject.rdf"));
+       String str = FileUtils.readFileToString(new File("src/test/resources/1.owl"));    	
+
+        UserProfileIni profile = new UserProfileIni(new File("src/test/resources/user_profile.ini"));
+        
+        ModeSelection mdParser = new ModeSelection(str, profile);
+
+        Set<Integer> keys;
+        Map<Integer, String> tmp;
+
+        System.out.println("---------------- nonVerbal: ");
+        tmp = mdParser.getNonVerbalDialogueElements();
+        keys = tmp.keySet();
+        for (Integer key : keys) {
+            System.out.println(key + " " + tmp.get(key));
+        }
+
+        System.out.println("----------------- verbal: ");
+        tmp = mdParser.getVerbalDialogueElements();
+        keys = tmp.keySet();
+        for (Integer key : keys) {
+            System.out.println(key + " " + tmp.get(key));
+            //System.out.println(tmp.get(key));
+        }
     }
+    
+    @Test
+    public void testPork() throws Exception {
 
-    public void addFacialIntensity(Model modelTmp, Resource dialogAct, String intensity) {
-        Property FacIntensity = modelTmp.getProperty(modeSelectionIRI + "#" + "FacialIntensity");
-        Literal intensLiteral = modelTmp.createLiteral(intensity);
-        modelTmp.addLiteral(dialogAct, FacIntensity, intensLiteral);
+    	String str = FileUtils.readFileToString(new File("src/test/resources/notEatPork.rdf"));
+
+        UserProfileIni profile = new UserProfileIni(new File("src/test/resources/user_profile.ini"));
+        
+        ModeSelection mdParser = new ModeSelection(str, profile);
+
+        Set<Integer> keys;
+        Map<Integer, String> tmp;
+
+        System.out.println("---------------- nonVerbal: ");
+        tmp = mdParser.getNonVerbalDialogueElements();
+        keys = tmp.keySet();
+        for (Integer key : keys) {
+            System.out.println(key + " " + tmp.get(key));
+        }
+
+        System.out.println("----------------- verbal: ");
+        tmp = mdParser.getVerbalDialogueElements();
+        keys = tmp.keySet();
+        for (Integer key : keys) {
+            System.out.println(key + " " + tmp.get(key));            
+        }
     }
+    
+    @Test
+    public void testAllergy() throws Exception {
 
-    public void addFaceEnthusiasm(Model modelTmp, Resource dialogAct, String enthusiasm) {
-        Property FacEnthusiasm = modelTmp.getProperty(modeSelectionIRI + "#" + "FacialEnthusiasm");
-        Literal enthLiteral = modelTmp.createLiteral(enthusiasm);
-        modelTmp.addLiteral(dialogAct, FacEnthusiasm, enthLiteral);
+    	String str = FileUtils.readFileToString(new File("src/test/resources/lactoseAllergy.rdf"));
+
+        UserProfileIni profile = new UserProfileIni(new File("src/test/resources/user_profile.ini"));
+        
+        ModeSelection mdParser = new ModeSelection(str, profile);
+
+        Set<Integer> keys;
+        Map<Integer, String> tmp;
+
+        System.out.println("---------------- nonVerbal: ");
+        tmp = mdParser.getNonVerbalDialogueElements();
+        keys = tmp.keySet();
+        for (Integer key : keys) {
+            System.out.println(key + " " + tmp.get(key));
+        }
+
+        System.out.println("----------------- verbal: ");
+        tmp = mdParser.getVerbalDialogueElements();
+        keys = tmp.keySet();
+        for (Integer key : keys) {
+            System.out.println(key + " " + tmp.get(key));            
+        }
     }
+    
+    @Test
+    public void testPockets() throws Exception {
 
-    public void addYesNoFacialExpr(Model modelTmp, Resource dialogAct, String facialExpr) {
-        //YES OR NO
-        Property FacialExpression = modelTmp.getProperty(modeSelectionIRI + "#" + "FacialExpression");
-        Literal faceLiteral = modelTmp.createLiteral(facialExpr);
-        modelTmp.addLiteral(dialogAct, FacialExpression, faceLiteral);
+    	String str = FileUtils.readFileToString(new File("src/test/resources/ContentRDFs/likeSwabianPockets.rdf"));
+
+        UserProfileIni profile = new UserProfileIni(new File("src/test/resources/young_german.ini"));
+        
+        ModeSelection mdParser = new ModeSelection(str, profile);
+
+        Set<Integer> keys;
+        Map<Integer, String> tmp;
+
+        System.out.println("---------------- nonVerbal: ");
+        tmp = mdParser.getNonVerbalDialogueElements();
+        keys = tmp.keySet();
+        for (Integer key : keys) {
+            System.out.println(key + " " + tmp.get(key));
+        }
+
+        System.out.println("----------------- verbal: ");
+        tmp = mdParser.getVerbalDialogueElements();
+        keys = tmp.keySet();
+        for (Integer key : keys) {
+            System.out.println(key + " " + tmp.get(key));            
+        }
+    }
+    
+    @Test
+    public void testNewspaper() throws Exception {
+
+    	String str = FileUtils.readFileToString(new File("src/test/resources/article.rdf"));
+
+        UserProfileIni profile = new UserProfileIni(new File("src/test/resources/young_german.ini"));
+        
+        ModeSelection mdParser = new ModeSelection(str, profile);
+
+        Set<Integer> keys;
+        Map<Integer, String> tmp;
+
+        System.out.println("---------------- nonVerbal: ");
+        tmp = mdParser.getNonVerbalDialogueElements();
+        keys = tmp.keySet();
+        for (Integer key : keys) {
+            System.out.println(key + " " + tmp.get(key));
+        }
+
+        System.out.println("----------------- verbal: ");
+        tmp = mdParser.getVerbalDialogueElements();
+        keys = tmp.keySet();
+        for (Integer key : keys) {
+            System.out.println(key + " " + tmp.get(key));            
+        }
+    }
+    
+    @Test
+    public void testASkTask() throws Exception {
+
+    	String str = FileUtils.readFileToString(new File("src/test/resources/dm-output-AskTask.rdf"));
+
+        UserProfileIni profile = new UserProfileIni(new File("src/test/resources/young_german.ini"));
+        
+        ModeSelection mdParser = new ModeSelection(str, profile);
+
+        Set<Integer> keys;
+        Map<Integer, String> tmp;
+
+        System.out.println("---------------- nonVerbal: ");
+        tmp = mdParser.getNonVerbalDialogueElements();
+        keys = tmp.keySet();
+        for (Integer key : keys) {
+            System.out.println(key + " " + tmp.get(key));
+        }
+
+        System.out.println("----------------- verbal: ");
+        tmp = mdParser.getVerbalDialogueElements();
+        keys = tmp.keySet();
+        for (Integer key : keys) {
+            System.out.println(key + " " + tmp.get(key));            
+        }
+    }
+    
+    @Test
+    public void testAskTaskFollowUp() throws Exception {
+
+    	String str = FileUtils.readFileToString(new File("src/test/resources/dm-output-AskTaskFollowUp.rdf"));
+
+        UserProfileIni profile = new UserProfileIni(new File("src/test/resources/young_german.ini"));
+        
+        ModeSelection mdParser = new ModeSelection(str, profile);
+
+        Set<Integer> keys;
+        Map<Integer, String> tmp;
+
+        System.out.println("---------------- nonVerbal: ");
+        tmp = mdParser.getNonVerbalDialogueElements();
+        keys = tmp.keySet();
+        for (Integer key : keys) {
+            System.out.println(key + " " + tmp.get(key));
+        }
+
+        System.out.println("----------------- verbal: ");
+        tmp = mdParser.getVerbalDialogueElements();
+        keys = tmp.keySet();
+        for (Integer key : keys) {
+            System.out.println(key + " " + tmp.get(key));            
+        }
+    }
+    
+    @Test
+    public void testSimpleMotivate() throws Exception {
+
+    	String str = FileUtils.readFileToString(new File("src/test/resources/dm-output-SimpleMotivate.rdf"));
+
+        UserProfileIni profile = new UserProfileIni(new File("src/test/resources/young_german.ini"));
+        
+        ModeSelection mdParser = new ModeSelection(str, profile);
+
+        Set<Integer> keys;
+        Map<Integer, String> tmp;
+
+        System.out.println("---------------- nonVerbal: ");
+        tmp = mdParser.getNonVerbalDialogueElements();
+        keys = tmp.keySet();
+        for (Integer key : keys) {
+            System.out.println(key + " " + tmp.get(key));
+        }
+
+        System.out.println("----------------- verbal: ");
+        tmp = mdParser.getVerbalDialogueElements();
+        keys = tmp.keySet();
+        for (Integer key : keys) {
+            System.out.println(key + " " + tmp.get(key));            
+        }
+    }
+    
+    @Test
+    public void testWeather() throws Exception {
+
+    	String str = FileUtils.readFileToString(new File("src/test/resources/dm-output-weather.rdf"));
+
+        UserProfileIni profile = new UserProfileIni(new File("src/test/resources/young_german.ini"));
+        
+        ModeSelection mdParser = new ModeSelection(str, profile);
+
+        Set<Integer> keys;
+        Map<Integer, String> tmp;
+
+        System.out.println("---------------- nonVerbal: ");
+        tmp = mdParser.getNonVerbalDialogueElements();
+        keys = tmp.keySet();
+        for (Integer key : keys) {
+            System.out.println(key + " " + tmp.get(key));
+        }
+
+        System.out.println("----------------- verbal: ");
+        tmp = mdParser.getVerbalDialogueElements();
+        keys = tmp.keySet();
+        for (Integer key : keys) {
+            System.out.println(key + " " + tmp.get(key));            
+        }
+    }
+    
+    @Test
+    public void testProfileJoan() throws Exception {
+       throw new Exception();
     }
 }
