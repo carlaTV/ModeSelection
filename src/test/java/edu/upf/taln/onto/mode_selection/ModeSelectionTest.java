@@ -217,7 +217,8 @@ public class ModeSelectionTest {
     @Test
     public void testReject() throws Exception {
 
-        String str = FileUtils.readFileToString(new File("src/test/resources/dm-output-Reject.rdf"));    	
+        //String str = FileUtils.readFileToString(new File("src/test/resources/dm-output-Reject.rdf"));
+       String str = FileUtils.readFileToString(new File("src/test/resources/1.owl"));    	
 
         UserProfileIni profile = new UserProfileIni(new File("src/test/resources/user_profile.ini"));
         
