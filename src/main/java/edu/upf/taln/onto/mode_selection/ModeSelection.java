@@ -103,13 +103,13 @@ public final class ModeSelection {
                     V = defV;
                 }
                 
-                if (country.equals("es") || country.equals("Turkey")) {
+                if (country.equals("es") || country.equals("tr")) {
                     kv = (float) 1.5;
                     V = V * kv;
                     ka = 1;
                     A = A * ka;
                 }
-                if (country.equals("ge") || country.equals("Poland")) {
+                if (country.equals("ge") || country.equals("pl")) {
                     kv = (float) 1.25;
                     V = V * kv;
                     ka = (float) 0.80;
@@ -134,13 +134,13 @@ public final class ModeSelection {
 
                 facExpr = "grateful";
                 
-                if (country.equals("es") || country.equals("Turkey")) {
+                if (country.equals("es") || country.equals("tr")) {
                     kv = (float) 1.10;
                     V = V * kv;
                     ka = (float) 1.20;
                     A = A * ka;
                 }
-                if (country.equals("ge") || country.equals("Poland")) {
+                if (country.equals("ge") || country.equals("pl")) {
                     kv = (float) 1.10;
                     V = V * kv;
                     ka = (float) 0.80;
@@ -166,13 +166,13 @@ public final class ModeSelection {
 
                 facExpr = "apologetic";
                 
-                if (country.equals("es") || country.equals("Turkey")) {
+                if (country.equals("es") || country.equals("tr")) {
                     kv = (float) 0.75;
                     V = V * kv;
                     ka = (float) 0.80;
                     A = A * ka;
                 }
-                if (country.equals("ge") || country.equals("Poland")) {
+                if (country.equals("ge") || country.equals("pl")) {
                     kv = (float) 1.20;
                     V = V * kv;
                     ka = (float) 1.00;
@@ -196,13 +196,13 @@ public final class ModeSelection {
                 
                 facExpr = "content";
                 
-                if (country.equals("es") || country.equals("Turkey")) {
+                if (country.equals("es") || country.equals("tr")) {
                     kv = (float) 1.30;
                     V = V * kv;
                     ka = (float) 1.00;
                     A = A * ka;
                 }
-                if (country.equals("ge") || country.equals("Poland")) {
+                if (country.equals("ge") || country.equals("pl")) {
                     kv = (float) 1.00;
                     V = V * kv;
                     ka = (float) 0.75;
@@ -226,13 +226,13 @@ public final class ModeSelection {
 
                 facExpr = "enthusiastic";
                 
-                if (country.equals("es") || country.equals("Turkey")) {
+                if (country.equals("es") || country.equals("tr")) {
                     kv = (float) 1.50;
                     V = V * kv;
                     ka = (float) 1.00;
                     A = A * ka;
                 }
-                if (country.equals("ge") || country.equals("Poland")) {
+                if (country.equals("ge") || country.equals("pl")) {
                     kv = (float) 1.25;
                     V = V * kv;
                     ka = (float) 0.75;
@@ -256,13 +256,13 @@ public final class ModeSelection {
                 
                 facExpr = "curious";
                 
-                if (country.equals("es") || country.equals("Turkey")) {
+                if (country.equals("es") || country.equals("tr")) {
                     kv = (float) 1.30;
                     V = V * kv;
                     ka = (float) 1.00;
                     A = A * ka;
                 }
-                if (country.equals("ge") || country.equals("Poland")) {
+                if (country.equals("ge") || country.equals("pl")) {
                     kv = (float) 1.00;
                     V = V * kv;
                     ka = (float) 0.75;
@@ -286,13 +286,13 @@ public final class ModeSelection {
                 
                 facExpr = "caring";
                 
-                if (country.equals("es") || country.equals("Turkey")) {
+                if (country.equals("es") || country.equals("tr")) {
                     kv = (float) 0.8;
                     V = V * kv;
                     ka = (float) 1.00;
                     A = A * ka;
                 }
-                if (country.equals("ge") || country.equals("Poland")) {
+                if (country.equals("ge") || country.equals("pl")) {
                     kv = (float) 1.00;
                     V = V * kv;
                     ka = (float) 1.20;
@@ -315,13 +315,13 @@ public final class ModeSelection {
                 
                 facExpr = "relaxed";
                 
-                if (country.equals("es") || country.equals("Turkey")) {
+                if (country.equals("es") || country.equals("tr")) {
                     kv = (float) 1.50;
                     V = V * kv;
                     ka = (float) 1.00;
                     A = A * ka;
                 }
-                if (country.equals("ge") || country.equals("Poland")) {
+                if (country.equals("ge") || country.equals("pl")) {
                     kv = (float) 1.25;
                     V = V * kv;
                     ka = (float) 1.00;
@@ -344,13 +344,13 @@ public final class ModeSelection {
                 
                 facExpr = "serious";
                 
-                if (country.equals("es") || country.equals("Turkey")) {
+                if (country.equals("es") || country.equals("tr")) {
                     kv = (float) 3.00;
                     V = V * kv;
                     ka = (float) 1.00;
                     A = A * ka;
                 }
-                if (country.equals("ge") || country.equals("Poland")) {
+                if (country.equals("ge") || country.equals("pl")) {
                     kv = (float) 1.50;
                     V = V * kv;
                     ka = (float) 1.00;
