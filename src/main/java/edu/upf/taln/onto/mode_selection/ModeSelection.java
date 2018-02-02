@@ -39,7 +39,7 @@ public final class ModeSelection {
     static String contents2 = "ShowWebpage";
     static String contents3 = "Canned";
     static String contents4 = "ProactiveList";
-    static String irresponse = "IRResponse";
+    static String contents5 = "IRResponse";
     static String task1 = "AskTask";
     static String task2 = "AskTaskFollowUp";
     static String calm = "CalmDown";
@@ -269,7 +269,7 @@ public final class ModeSelection {
                 }
 
             }
-            if (daClass.equals(contents1) || daClass.equals(contents2) || daClass.equals(contents3) || daClass.equals(contents4) ) {
+            if (daClass.equals(contents1) || daClass.equals(contents2) || daClass.equals(contents3) || daClass.equals(contents4) || daClass.equals(contents5)) {
                 mode = Mode.VERBAL;
                 defV = (float) 0.75;
                 defA = (float) 0.48;
@@ -358,7 +358,7 @@ public final class ModeSelection {
                     A = A * ka;
                 }
             }
-            if (daClass.equals(ack) || daClass.equals(irresponse)) {
+            if (daClass.equals(acknowledge)) {
                 mode = Mode.VERBAL;
                 defV = (float) 0.51;
                 defA = (float) 0.00;
