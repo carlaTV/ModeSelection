@@ -23,30 +23,51 @@ public final class ModeSelection {
 
     //strings for culture
     static String german = "de";
-    static String spanish = "sp";
+    static String spanish = "es";
     static String turkish = "tr";
     static String polish = "pl";
 
     //strings for DAs
     static String greeting1 = "PersonalGreet";
     static String greeting2 = "SimpleGreet";
+    static String greeting3 = "MorningGreet";
+    static String greeting4 = "EveningGreet";
+    static String joy1 = "ShareJoy";
+    static String joy2 = "SimpleMotivate";
+    static String joy3 = "Introduce";
     static String thank1 = "Thank";
     static String thank2 = "AnswerThank";
-    static String bye1 = "GoodBye";
-    static String bye2 = "SayGoodBye";
-    static String apologize = "Apologise";
+    static String bye1 = "SimpleGoodbye";
+    static String bye2 = "PersonalSayGoodbye";
+    static String bye3 = "MeetAgainSayGoodbye";
+    static String askmood = "AskMood";
+    static String apologize1 = "SimpleApologise";
+    static String apologize2 = "PersonalApologise";
     static String contents1 = "ReadNewspaper";
     static String contents2 = "ShowWebpage";
     static String contents3 = "Canned";
     static String contents4 = "ProactiveList";
-    static String irresponse = "IRResponse";
+    static String contents5 = "IRResponse";
+    static String contents6 = "ShowWeather";
     static String task1 = "AskTask";
     static String task2 = "AskTaskFollowUp";
+    static String feedback = "RequestFeedback";
     static String calm = "CalmDown";
-    static String ack = "Ack";
+    static String calm2 = "Console";
+    static String calm3 = "CheerUp";
+    static String acknowledge = "Acknowledge";
+    static String accept = "Accept";
+    static String affirm = "Affirm";
     static String reject = "Reject";
     static String declare = "Declare";
     static String clarify = "Clarification";
+    static String clarify2 = "RequestRepeat";
+    static String clarify3 = "RequestRephrase";
+    static String clarify4 = "StateMissingComprehension";
+    static String clarify5 = "UnknownRequest";
+    static String clarify6 = "UnknownStatement";
+    static String clarify7 = "NotFound";
+    
     
 
     static String iniFilePath = "src/main/resources/";
@@ -72,14 +93,14 @@ public final class ModeSelection {
         return new UserProfileIni(profileFile);
     }
 
-    public ModeSelection(String owlStr, UserProfileIni profile) throws CustomException, UnsupportedEncodingException {
+    public ModeSelection(String owlStr, UserInfo profile) throws CustomException, UnsupportedEncodingException {
 
         SystemAction sa = new SystemAction(owlStr);
 
         processResponses(sa, profile);
     }
 
-    private void processResponses(SystemAction systemAction, UserProfileIni profile) throws CustomException {
+    private void processResponses(SystemAction systemAction, UserInfo profile) throws CustomException {
 
         float valence = systemAction.getValence();
         float arousal = systemAction.getArousal();
@@ -97,12 +118,13 @@ public final class ModeSelection {
 
         //identity
         String gender = profile.getGender();
-        int age = profile.getAge();
+        Integer age = profile.getAge();
         //culture
-        String country = profile.getCountry();
+        String language = profile.getLanguage();
         //personality
-        String proximity = profile.getProximity();
-        String personality = profile.getPersonality();
+        
+        //String proximity = profile.getProximity();
+        //String personality = profile.getPersonality();
 
         // process the read DAs in order to assign them to verbal vs non-verbal output and add respective mode-selection tags
         for (int order = 0; order < dialogActs.size(); order++) {
@@ -115,7 +137,37 @@ public final class ModeSelection {
             Mode mode = null;
             Model modelTmp = null;
 
-            if (daClass.equals(greeting1) || daClass.equals(greeting2)) { // create verbal owl DA
+            {
+               mode = Mode.VERBAL;
+                defV = (float) 0.00;
+                defA = (float) 0.00;
+
+                if (defV < valence) {
+                    A = defA;
+                    V = valence;
+
+                } else {
+                    A = defA;
+                    V = defV;
+                }
+
+                facExpr = "neutral";
+
+                if (language.equals(spanish) || language.equals(turkish)) {
+                    kv = (float) 1.00;
+                    V = V * kv;
+                    ka = (float) 1.00;
+                    A = A * ka;
+                }
+                if (language.equals(german) || language.equals(polish)) {
+                    kv = (float) 1.00;
+                    V = V * kv;
+                    ka = (float) 1.00;
+                    A = A * ka;
+                }
+            }            
+            
+            if (daClass.equals(greeting1) || daClass.equals(greeting2)|| daClass.equals(greeting3)|| daClass.equals(greeting4) || daClass.equals(joy1) || daClass.equals(calm3) || daClass.equals(joy2) || daClass.equals(joy3)) { // create verbal owl DA
                 mode = Mode.VERBAL;
 
                 facExpr = "joyful";
@@ -131,13 +183,13 @@ public final class ModeSelection {
                     V = defV;
                 }
 
-                if (country.equals(spanish) || country.equals(turkish)) {
+                if (language.equals(spanish) || language.equals(turkish)) {
                     kv = (float) 1.5;
                     V = V * kv;
                     ka = 1;
                     A = A * ka;
                 }
-                if (country.equals(german) || country.equals(polish)) {
+                if (language.equals(german) || language.equals(polish)) {
                     kv = (float) 1.25;
                     V = V * kv;
                     ka = (float) 0.80;
@@ -162,13 +214,13 @@ public final class ModeSelection {
 
                 facExpr = "grateful";
 
-                if (country.equals(spanish) || country.equals(turkish)) {
+                if (language.equals(spanish) || language.equals(turkish)) {
                     kv = (float) 1.10;
                     V = V * kv;
                     ka = (float) 1.20;
                     A = A * ka;
                 }
-                if (country.equals(german) || country.equals(polish)) {
+                if (language.equals(german) || language.equals(polish)) {
                     kv = (float) 1.10;
                     V = V * kv;
                     ka = (float) 0.80;
@@ -176,7 +228,7 @@ public final class ModeSelection {
                 }
 
             }
-            if (daClass.equals(apologize) || daClass.equals(clarify)) { // create verbal owl DA
+            if (daClass.equals(apologize1) || daClass.equals(apologize2)) { // create verbal owl DA
 
                 mode = Mode.VERBAL;
 
@@ -194,20 +246,51 @@ public final class ModeSelection {
 
                 facExpr = "apologetic";
 
-                if (country.equals(spanish) || country.equals(turkish)) {
+                if (language.equals(spanish) || language.equals(turkish)) {
                     kv = (float) 0.75;
                     V = V * kv;
                     ka = (float) 0.80;
                     A = A * ka;
                 }
-                if (country.equals(german) || country.equals(polish)) {
+                if (language.equals(german) || language.equals(polish)) {
                     kv = (float) 1.20;
                     V = V * kv;
                     ka = (float) 1.00;
                     A = A * ka;
                 }
             }
-            if (daClass.equals(bye1) || daClass.equals(bye2)) { // create verbal owl DA
+            if (daClass.equals(clarify) || daClass.equals(clarify2) || daClass.equals(clarify3)|| daClass.equals(clarify4)|| daClass.equals(clarify5) || daClass.equals(clarify6) || daClass.equals(clarify7)) { // create verbal owl DA
+
+                mode = Mode.VERBAL;
+
+                defV = (float) -0.16;
+                defA = (float) -0.29;
+
+                if (defV < valence) {
+                    A = defA;
+                    V = valence;
+
+                } else {
+                    A = defA;
+                    V = defV;
+                }
+
+                facExpr = "apologetic";
+
+                if (language.equals(spanish) || language.equals(turkish)) {
+                    kv = (float) 0.75;
+                    V = V * kv;
+                    ka = (float) 0.80;
+                    A = A * ka;
+                }
+                if (language.equals(german) || language.equals(polish)) {
+                    kv = (float) 1.20;
+                    V = V * kv;
+                    ka = (float) 1.00;
+                    A = A * ka;
+                }
+            }
+            if (daClass.equals(bye1) || daClass.equals(bye2)|| daClass.equals(bye3)|| daClass.equals(askmood)) { // create verbal owl DA
                 mode = Mode.VERBAL;
 
                 defV = (float) 0.54;
@@ -224,13 +307,13 @@ public final class ModeSelection {
 
                 facExpr = "content";
 
-                if (country.equals(spanish) || country.equals(turkish)) {
+                if (language.equals(spanish) || language.equals(turkish)) {
                     kv = (float) 1.30;
                     V = V * kv;
                     ka = (float) 1.00;
                     A = A * ka;
                 }
-                if (country.equals(german) || country.equals(polish)) {
+                if (language.equals(german) || language.equals(polish)) {
                     kv = (float) 1.00;
                     V = V * kv;
                     ka = (float) 0.75;
@@ -238,7 +321,7 @@ public final class ModeSelection {
                 }
 
             }
-            if (daClass.equals(contents1) || daClass.equals(contents2) || daClass.equals(contents3) || daClass.equals(contents4) ) {
+            if (daClass.equals(contents1) || daClass.equals(contents2) || daClass.equals(contents3) || daClass.equals(contents4) || daClass.equals(contents5) || daClass.equals(contents6)) {
                 mode = Mode.VERBAL;
                 defV = (float) 0.75;
                 defA = (float) 0.48;
@@ -254,13 +337,13 @@ public final class ModeSelection {
 
                 facExpr = "enthusiastic";
 
-                if (country.equals(spanish) || country.equals(turkish)) {
+                if (language.equals(spanish) || language.equals(turkish)) {
                     kv = (float) 1.50;
                     V = V * kv;
                     ka = (float) 1.00;
                     A = A * ka;
                 }
-                if (country.equals(german) || country.equals(polish)) {
+                if (language.equals(german) || language.equals(polish)) {
                     kv = (float) 1.25;
                     V = V * kv;
                     ka = (float) 0.75;
@@ -284,13 +367,13 @@ public final class ModeSelection {
 
                 facExpr = "curious";
 
-                if (country.equals(spanish) || country.equals(turkish)) {
+                if (language.equals(spanish) || language.equals(turkish)) {
                     kv = (float) 1.30;
                     V = V * kv;
                     ka = (float) 1.00;
                     A = A * ka;
                 }
-                if (country.equals(german) || country.equals(polish)) {
+                if (language.equals(german) || language.equals(polish)) {
                     kv = (float) 1.00;
                     V = V * kv;
                     ka = (float) 0.75;
@@ -298,7 +381,7 @@ public final class ModeSelection {
                 }
             }
 
-            if (daClass.equals(calm)) {
+            if (daClass.equals(calm) || daClass.equals(calm2)) {
                 mode = Mode.VERBAL;
                 defV = (float) 0.70;
                 defA = (float) -0.14;
@@ -314,20 +397,20 @@ public final class ModeSelection {
 
                 facExpr = "caring";
 
-                if (country.equals(spanish) || country.equals(turkish)) {
+                if (language.equals(spanish) || language.equals(turkish)) {
                     kv = (float) 0.8;
                     V = V * kv;
                     ka = (float) 1.00;
                     A = A * ka;
                 }
-                if (country.equals(german) || country.equals(polish)) {
+                if (language.equals(german) || language.equals(polish)) {
                     kv = (float) 1.00;
                     V = V * kv;
                     ka = (float) 1.20;
                     A = A * ka;
                 }
             }
-            if (daClass.equals(ack) || daClass.equals(irresponse)) {
+            if (daClass.equals(acknowledge) || daClass.equals(affirm) || daClass.equals(accept)) {
                 mode = Mode.VERBAL;
                 defV = (float) 0.51;
                 defA = (float) 0.00;
@@ -343,13 +426,13 @@ public final class ModeSelection {
 
                 facExpr = "relaxed";
 
-                if (country.equals(spanish) || country.equals(turkish)) {
+                if (language.equals(spanish) || language.equals(turkish)) {
                     kv = (float) 1.50;
                     V = V * kv;
                     ka = (float) 1.00;
                     A = A * ka;
                 }
-                if (country.equals(german) || country.equals(polish)) {
+                if (language.equals(german) || language.equals(polish)) {
                     kv = (float) 1.25;
                     V = V * kv;
                     ka = (float) 1.00;
@@ -372,13 +455,13 @@ public final class ModeSelection {
 
                 facExpr = "serious";
 
-                if (country.equals(spanish) || country.equals(turkish)) {
+                if (language.equals(spanish) || language.equals(turkish)) {
                     kv = (float) 3.00;
                     V = V * kv;
                     ka = (float) 1.00;
                     A = A * ka;
                 }
-                if (country.equals(german) || country.equals(polish)) {
+                if (language.equals(german) || language.equals(polish)) {
                     kv = (float) 1.50;
                     V = V * kv;
                     ka = (float) 1.00;
@@ -408,7 +491,7 @@ public final class ModeSelection {
                 Resource SwabPockets = getResourceByClass(modelTmp, "SwabianPockets");
                 if (SwabPockets != null) {
                     System.out.println("This is the instance of the class Swabian Pockets: " + SwabPockets.toString());
-                    if (country.equals(german)) {
+                    if (language.equals(german)) {
                         //addFacialExpr(modelTmp, dialogAct, "smiley");
                         //canviem dialogAct per classInsRes:
                         addFacialExpr(modelTmp, SwabPockets, "smiley");
@@ -440,35 +523,7 @@ public final class ModeSelection {
                 }*/
 
             }
-            else{
-               mode = Mode.VERBAL;
-                defV = (float) 0.00;
-                defA = (float) 0.00;
 
-                if (defV < valence) {
-                    A = defA;
-                    V = valence;
-
-                } else {
-                    A = defA;
-                    V = defV;
-                }
-
-                facExpr = "neutral";
-
-                if (country.equals(spanish) || country.equals(turkish)) {
-                    kv = (float) 1.00;
-                    V = V * kv;
-                    ka = (float) 1.00;
-                    A = A * ka;
-                }
-                if (country.equals(german) || country.equals(polish)) {
-                    kv = (float) 1.00;
-                    V = V * kv;
-                    ka = (float) 1.00;
-                    A = A * ka;
-                }
-            }
             modelTmp = createVerbal(dialogAct, A, V, counter);
 
             addFacialExpr(modelTmp, dialogAct, facExpr);
