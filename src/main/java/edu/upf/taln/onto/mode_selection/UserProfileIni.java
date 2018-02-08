@@ -55,7 +55,7 @@ public class UserProfileIni extends UserInfo {
         return confSection.getInteger(AGE_KEY, null);
     }
     
-    public String getCountry() {
+    public String getLanguage() {
         SubnodeConfiguration confSection = config.getSection(CULTURE_SECTION);
         return confSection.getString(COUNTRY_KEY);
     }

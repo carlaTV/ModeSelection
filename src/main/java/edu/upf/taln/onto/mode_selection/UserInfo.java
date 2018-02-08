@@ -4,7 +4,7 @@ public class UserInfo {
 
     private String name;
     private String gender;
-    private String culture;
+    private String language;
     private Integer age;
 
     public UserInfo() {
@@ -14,7 +14,7 @@ public class UserInfo {
         this.name = name;
         this.gender = gender;
         this.age = age;
-        this.culture = culture;
+        this.language = culture;
     }
 
     public UserInfo(String name, String gender, String culture) {
@@ -33,7 +33,7 @@ public class UserInfo {
         return age;
     }
 
-    public String getCountry() {
-        return culture;
+    public String getLanguage() {
+        return language;
     }
 }

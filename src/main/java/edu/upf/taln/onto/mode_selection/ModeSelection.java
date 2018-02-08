@@ -244,7 +244,7 @@ public final class ModeSelection{
             
             //extract culture
             Integer Age =  profile.getAge();
-            String culture = profile.getCountry();
+            String culture = profile.getLanguage();
             float delta = 0;
             if (culture.equals("es") || culture.equals("pl")){
                 if (Age < 60){
