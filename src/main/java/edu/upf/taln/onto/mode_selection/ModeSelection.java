@@ -1,6 +1,5 @@
 package edu.upf.taln.onto.mode_selection;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -83,74 +82,74 @@ public final class ModeSelection{
         
         //map DA to tag
         Da2tag = new HashMap<>();
-        Da2tag.put(DialogueAct.Accept,      GenericDialogAct.Acknowledge);
-        Da2tag.put(DialogueAct.Acknowledge, GenericDialogAct.Acknowledge);
-        Da2tag.put(DialogueAct.Affirm,      GenericDialogAct.Acknowledge);
-        Da2tag.put(DialogueAct.AnswerThank, GenericDialogAct.Thank);
-        Da2tag.put(DialogueAct.AskMood,     GenericDialogAct.AskMood);
-        Da2tag.put(DialogueAct.AskTask, GenericDialogAct.AskTask);
+        Da2tag.put(DialogueAct.Accept,          GenericDialogAct.Acknowledge);
+        Da2tag.put(DialogueAct.Acknowledge,     GenericDialogAct.Acknowledge);
+        Da2tag.put(DialogueAct.Affirm,          GenericDialogAct.Acknowledge);
+        Da2tag.put(DialogueAct.AnswerThank,     GenericDialogAct.Thank);
+        Da2tag.put(DialogueAct.AskMood,         GenericDialogAct.AskMood);
+        Da2tag.put(DialogueAct.AskTask,         GenericDialogAct.AskTask);
         Da2tag.put(DialogueAct.AskTaskFollowUp, GenericDialogAct.AskTask);
-        Da2tag.put(DialogueAct.CalmDown, GenericDialogAct.CalmDown);
-        Da2tag.put(DialogueAct.Canned, GenericDialogAct.Declare);
-        Da2tag.put(DialogueAct.CheerUp, GenericDialogAct.CheerUp);
-        Da2tag.put(DialogueAct.Clarification, GenericDialogAct.Apologise);
-        Da2tag.put(DialogueAct.Console, GenericDialogAct.Apologise);
-        Da2tag.put(DialogueAct.Declare, GenericDialogAct.Declare);
-        Da2tag.put(DialogueAct.EveningGreet, GenericDialogAct.Greeting);
-        Da2tag.put(DialogueAct.IRResponse, GenericDialogAct.Declare);
-        Da2tag.put(DialogueAct.Introduce, GenericDialogAct.Declare);
+        Da2tag.put(DialogueAct.CalmDown,        GenericDialogAct.CalmDown);
+        Da2tag.put(DialogueAct.Canned,          GenericDialogAct.Declare);
+        Da2tag.put(DialogueAct.CheerUp,         GenericDialogAct.CheerUp);
+        Da2tag.put(DialogueAct.Clarification,   GenericDialogAct.Apologise);
+        Da2tag.put(DialogueAct.Console,         GenericDialogAct.Apologise);
+        Da2tag.put(DialogueAct.Declare,         GenericDialogAct.Declare);
+        Da2tag.put(DialogueAct.EveningGreet,    GenericDialogAct.Greeting);
+        Da2tag.put(DialogueAct.IRResponse,      GenericDialogAct.Declare);
+        Da2tag.put(DialogueAct.Introduce,       GenericDialogAct.Declare);
         Da2tag.put(DialogueAct.MeetAgainSayGoodbye, GenericDialogAct.GoodBye);
-        Da2tag.put(DialogueAct.MorningGreet, GenericDialogAct.Greeting);
-        Da2tag.put(DialogueAct.NotFound, GenericDialogAct.Apologise);
+        Da2tag.put(DialogueAct.MorningGreet,    GenericDialogAct.Greeting);
+        Da2tag.put(DialogueAct.NotFound,        GenericDialogAct.Apologise);
         Da2tag.put(DialogueAct.PersonalApologise, GenericDialogAct.Apologise);
-        Da2tag.put(DialogueAct.PersonalGreet, GenericDialogAct.Greeting);
+        Da2tag.put(DialogueAct.PersonalGreet,   GenericDialogAct.Greeting);
         Da2tag.put(DialogueAct.PersonalSayGoodbye, GenericDialogAct.GoodBye);
-        Da2tag.put(DialogueAct.ProactiveList, GenericDialogAct.Declare);
-        Da2tag.put(DialogueAct.ReadNewspaper, GenericDialogAct.Declare);
-        Da2tag.put(DialogueAct.Reject, GenericDialogAct.Apologise);
+        Da2tag.put(DialogueAct.ProactiveList,   GenericDialogAct.Declare);
+        Da2tag.put(DialogueAct.ReadNewspaper,   GenericDialogAct.Declare);
+        Da2tag.put(DialogueAct.Reject,          GenericDialogAct.Apologise);
         Da2tag.put(DialogueAct.RequestFeedback, GenericDialogAct.Request);
-        Da2tag.put(DialogueAct.RequestRepeat, GenericDialogAct.Request);
+        Da2tag.put(DialogueAct.RequestRepeat,   GenericDialogAct.Request);
         Da2tag.put(DialogueAct.RequestRephrase, GenericDialogAct.Request);
-        Da2tag.put(DialogueAct.ShareJoy, GenericDialogAct.CheerUp);
-        Da2tag.put(DialogueAct.ShowWeather, GenericDialogAct.Declare);
-        Da2tag.put(DialogueAct.ShowWebpage, GenericDialogAct.Declare);
+        Da2tag.put(DialogueAct.ShareJoy,        GenericDialogAct.CheerUp);
+        Da2tag.put(DialogueAct.ShowWeather,     GenericDialogAct.Declare);
+        Da2tag.put(DialogueAct.ShowWebpage,     GenericDialogAct.Declare);
         Da2tag.put(DialogueAct.SimpleApologise, GenericDialogAct.Apologise);
-        Da2tag.put(DialogueAct.SimpleGoodbye, GenericDialogAct.GoodBye);
-        Da2tag.put(DialogueAct.SimpleGreet, GenericDialogAct.Greeting);
-        Da2tag.put(DialogueAct.SimpleMotivate, GenericDialogAct.CheerUp);
+        Da2tag.put(DialogueAct.SimpleGoodbye,   GenericDialogAct.GoodBye);
+        Da2tag.put(DialogueAct.SimpleGreet,     GenericDialogAct.Greeting);
+        Da2tag.put(DialogueAct.SimpleMotivate,  GenericDialogAct.CheerUp);
         Da2tag.put(DialogueAct.StateMissingComprehension, GenericDialogAct.Apologise);
-        Da2tag.put(DialogueAct.Thank, GenericDialogAct.Thank);
-        Da2tag.put(DialogueAct.UnknownRequest, GenericDialogAct.Apologise);
+        Da2tag.put(DialogueAct.Thank,           GenericDialogAct.Thank);
+        Da2tag.put(DialogueAct.UnknownRequest,  GenericDialogAct.Apologise);
         Da2tag.put(DialogueAct.UnknownStatement, GenericDialogAct.Apologise);
         
         
         //map tag to FacExpr
         tag2FacExpr = new HashMap<>();
-        tag2FacExpr.put(GenericDialogAct.Acknowledge, FacialExpression.relaxed);
-        tag2FacExpr.put(GenericDialogAct.Apologise, FacialExpression.apologetic);
-        tag2FacExpr.put(GenericDialogAct.AskMood, FacialExpression.content);
-        tag2FacExpr.put(GenericDialogAct.AskTask, FacialExpression.curious);
-        tag2FacExpr.put(GenericDialogAct.CalmDown, FacialExpression.caring);
-        tag2FacExpr.put(GenericDialogAct.CheerUp, FacialExpression.joyful);
-        tag2FacExpr.put(GenericDialogAct.Clarify, FacialExpression.apologetic);
-        tag2FacExpr.put(GenericDialogAct.Declare, FacialExpression.neutral);
-        tag2FacExpr.put(GenericDialogAct.GoodBye, FacialExpression.content);
-        tag2FacExpr.put(GenericDialogAct.Greeting, FacialExpression.joyful);
-        tag2FacExpr.put(GenericDialogAct.Request, FacialExpression.curious);
-        tag2FacExpr.put(GenericDialogAct.Thank, FacialExpression.grateful);
+        tag2FacExpr.put(GenericDialogAct.Acknowledge,   FacialExpression.relaxed);
+        tag2FacExpr.put(GenericDialogAct.Apologise,     FacialExpression.apologetic);
+        tag2FacExpr.put(GenericDialogAct.AskMood,       FacialExpression.content);
+        tag2FacExpr.put(GenericDialogAct.AskTask,       FacialExpression.curious);
+        tag2FacExpr.put(GenericDialogAct.CalmDown,      FacialExpression.caring);
+        tag2FacExpr.put(GenericDialogAct.CheerUp,       FacialExpression.joyful);
+        tag2FacExpr.put(GenericDialogAct.Clarify,       FacialExpression.apologetic);
+        tag2FacExpr.put(GenericDialogAct.Declare,       FacialExpression.neutral);
+        tag2FacExpr.put(GenericDialogAct.GoodBye,       FacialExpression.content);
+        tag2FacExpr.put(GenericDialogAct.Greeting,      FacialExpression.joyful);
+        tag2FacExpr.put(GenericDialogAct.Request,       FacialExpression.curious);
+        tag2FacExpr.put(GenericDialogAct.Thank,         FacialExpression.grateful);
         
         //map tag to Valence Arousal
         FacExpr2VA = new HashMap<>();
-        FacExpr2VA.put(FacialExpression.apologetic, new ValenceArousal((float)-0.16,(float) -0.29));
-        FacExpr2VA.put(FacialExpression.caring, new ValenceArousal((float) 0.7,(float) -0.14));
-        FacExpr2VA.put(FacialExpression.content, new ValenceArousal((float) 0.54,(float) 0.59));
-        FacExpr2VA.put(FacialExpression.curious, new ValenceArousal((float) 0.4,(float) 0.6));
-        FacExpr2VA.put(FacialExpression.enthusiastic, new ValenceArousal((float) 0.75,(float) 0.48));
-        FacExpr2VA.put(FacialExpression.grateful, new ValenceArousal((float) 0.68,(float) 0.27));
-        FacExpr2VA.put(FacialExpression.joyful, new ValenceArousal((float) 0.67,(float) 0.32));
-        FacExpr2VA.put(FacialExpression.neutral, new ValenceArousal(0,0));
-        FacExpr2VA.put(FacialExpression.relaxed, new ValenceArousal((float) 0.59,0));
-        FacExpr2VA.put(FacialExpression.serious, new ValenceArousal((float) 0.07,(float) 0.02));
+        FacExpr2VA.put(FacialExpression.apologetic,     new ValenceArousal((float)-0.16,(float) -0.29));
+        FacExpr2VA.put(FacialExpression.caring,         new ValenceArousal((float) 0.7,(float) -0.14));
+        FacExpr2VA.put(FacialExpression.content,        new ValenceArousal((float) 0.54,(float) 0.59));
+        FacExpr2VA.put(FacialExpression.curious,        new ValenceArousal((float) 0.4,(float) 0.6));
+        FacExpr2VA.put(FacialExpression.enthusiastic,   new ValenceArousal((float) 0.75,(float) 0.48));
+        FacExpr2VA.put(FacialExpression.grateful,       new ValenceArousal((float) 0.68,(float) 0.27));
+        FacExpr2VA.put(FacialExpression.joyful,         new ValenceArousal((float) 0.67,(float) 0.32));
+        FacExpr2VA.put(FacialExpression.neutral,        new ValenceArousal(0,0));
+        FacExpr2VA.put(FacialExpression.relaxed,        new ValenceArousal((float) 0.59,0));
+        FacExpr2VA.put(FacialExpression.serious,        new ValenceArousal((float) 0.07,(float) 0.02));
         
         
         //definim cada conjunt de gestures (4 casos de moment):
@@ -216,14 +215,11 @@ public final class ModeSelection{
             
             float valence = (systemAction.getValence());
             float arousal = systemAction.getArousal();
-            //ValenceArousal defaultV = (ValenceArousal) da2modeInfo.get(FacExpr);
             float defaultV = defaultVA.getValence();
             float defaultA = defaultVA.getArousal();
             
             float V = 0;
             float A = 0;
-            //float ka = 0;
-            //float kv = 0;
             
             if (defaultV < valence){
                 A = defaultA;
@@ -242,7 +238,7 @@ public final class ModeSelection{
             float V = va.getValence();
             float A = va.getArousal();
             
-            //extract culture
+            //evaluate language and age
             Integer Age =  profile.getAge();
             String culture = profile.getLanguage();
             float delta = 0;
@@ -366,22 +362,7 @@ public final class ModeSelection{
         return insObj;
 
     }
-
-    /*public Resource getWeather(Model model, String className) {
-
-        Resource insObj = null;
-        RSIterator iter = model.listReifiedStatements();
-        while (iter.hasNext()) {
-            ReifiedStatement stmt = iter.nextRS();
-            if (stmt.getStatement().getObject().toString().equals(ontoIRI + "#weatherClassification&gt;&#xD;\n" +
-            "\\\"" + className)) {
-                insObj = stmt.getStatement().getSubject();
-            }
-        }
-
-        return insObj;
-
-    }*/
+    
     public Resource getFalseTruthValueResource(Model model) {
 
         Resource insObj = null;
