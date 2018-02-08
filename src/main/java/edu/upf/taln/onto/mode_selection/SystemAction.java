@@ -11,6 +11,7 @@ import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
+import edu.upf.taln.onto.mode_selection.ModeSelection.DialogueAct;
 import static edu.upf.taln.onto.mode_selection.ModeSelection.dialogueIRI;
 import java.io.StringReader;
 import java.util.ArrayList;

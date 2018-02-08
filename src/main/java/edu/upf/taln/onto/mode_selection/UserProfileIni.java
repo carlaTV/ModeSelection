@@ -11,7 +11,7 @@ import org.apache.commons.configuration.tree.DefaultExpressionEngine;
  *
  * @author rcarlini
  */
-public class UserProfileIni {
+public class UserProfileIni extends UserInfo {
     
     private static final String IDENTITY_SECTION = "identity";
     private static final String NAME_KEY = "name";
@@ -29,6 +29,7 @@ public class UserProfileIni {
     private final HierarchicalINIConfiguration config;	
 
     public UserProfileIni(File iniFile) throws ConfigurationException {
+        super();
         config = new HierarchicalINIConfiguration(iniFile);
         
         DefaultExpressionEngine engine = new DefaultExpressionEngine();
@@ -49,9 +50,9 @@ public class UserProfileIni {
         return confSection.getString(GENDER_KEY);
     }
     
-    public int getAge() {
+    public Integer getAge() {
         SubnodeConfiguration confSection = config.getSection(IDENTITY_SECTION);
-        return confSection.getInt(AGE_KEY);
+        return confSection.getInteger(AGE_KEY, null);
     }
     
     public String getCountry() {
