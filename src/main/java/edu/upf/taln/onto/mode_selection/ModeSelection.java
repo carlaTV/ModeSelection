@@ -48,7 +48,7 @@ public final class ModeSelection{
         return new UserProfileIni(profileFile);
     }
     
-    enum Mode {
+    public enum Mode {
         VERBAL, NON_VERBAL
     };
 
