@@ -79,7 +79,7 @@ public final class ModeSelection{
     private final Map<GenericDialogAct, FacialExpression> tag2FacExpr;
     private final Map<FacialExpression, ValenceArousal> FacExpr2VA;
     
-    public ModeSelection(String str, UserProfileIni profile) {
+    public ModeSelection() {
         
         //map DA to tag
         Da2tag = new HashMap<>();
@@ -174,7 +174,13 @@ public final class ModeSelection{
             String daClass = sa.getClass(dialogAct); // get the type of the DA instance
 
             // Map SystemAction DA to GenericDA
-            GenericDialogAct GenericDA = Da2tag.get(DialogueAct.valueOf(daClass)); 
+            DialogueAct da;
+            try {
+                da = DialogueAct.valueOf(daClass);
+            } catch(IllegalArgumentException e) {
+                da = DialogueAct.NotFound;
+            }
+            GenericDialogAct GenericDA = Da2tag.get(da); 
             System.out.println(order + " DA is " + sa.getClass(dialogAct));
             
             // Map GenericDA to FacialExpression

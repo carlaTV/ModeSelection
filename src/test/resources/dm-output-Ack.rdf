@@ -11,10 +11,10 @@
   </rdf:Description>
   <rdf:Description rdf:about="http://kristina-project.eu/tmp#79a474f4-cd78-475d-9a7d-3789cdb7c789">
     <j.0:followedBy rdf:resource="http://kristina-project.eu/tmp#7c9bf70e-621f-494a-9a32-55a3b729aebf"/>
-    <rdf:type rdf:resource="http://kristina-project.eu/ontologies/dialogue_actions#Ack"/>
+    <rdf:type rdf:resource="http://kristina-project.eu/ontologies/dialogue_actions#Acknowledge"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://kristina-project.eu/tmp#7c9bf70e-621f-494a-9a32-55a3b729aebf">
-    <rdf:type rdf:resource="http://kristina-project.eu/ontologies/dialogue_actions#Ack"/>
+    <rdf:type rdf:resource="http://kristina-project.eu/ontologies/dialogue_actions#Acknowledge"/>
   </rdf:Description>
 </rdf:RDF>
 

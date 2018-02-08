@@ -25,7 +25,7 @@ public class ModeSelectionTest {
 
         UserProfileIni profile = new UserProfileIni(new File(profileFilePath));
         
-        ModeSelection mdParser = new ModeSelection(str, profile);
+        ModeSelection mdParser = new ModeSelection();
 
         Set<Integer> keys;
         Map<Integer, String> tmp;
