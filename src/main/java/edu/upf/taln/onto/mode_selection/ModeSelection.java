@@ -179,11 +179,11 @@ public final class ModeSelection{
             } catch(IllegalArgumentException e) {
                 da = DialogueAct.NotFound;
             }
-            GenericDialogAct GenericDA = Da2tag.get(da); 
+            GenericDialogAct genericDA = Da2tag.get(da); 
             System.out.println(order + " DA is " + sa.getClass(dialogAct));
             
             // Map GenericDA to FacialExpression
-            FacialExpression FacExpr = tag2FacExpr.get(GenericDA);
+            FacialExpression FacExpr = tag2FacExpr.get(genericDA);
             
             // Map FacialExpression to VA
             ValenceArousal VA = FacExpr2VA.get(FacExpr);
@@ -205,7 +205,10 @@ public final class ModeSelection{
             modelTmp.write(nonVerbalStream, "RDF/XML");
             String owlStr = nonVerbalStream.toString();
             
-            outputDAs.put(order, owlStr);
+            //CONDITION: if da is Simple + DA, generate only non-verbal behavior
+            if (mode == Mode.NON_VERBAL || da == DialogueAct.SimpleGreet){
+                outputDAs.put(order, owlStr);
+            }
         }
         
         return outputDAs;
