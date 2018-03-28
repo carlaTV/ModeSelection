@@ -204,11 +204,7 @@ public final class ModeSelection{
             ByteArrayOutputStream nonVerbalStream = new ByteArrayOutputStream();
             modelTmp.write(nonVerbalStream, "RDF/XML");
             String owlStr = nonVerbalStream.toString();
-            
-            //CONDITION: if da is Simple + DA, generate only non-verbal behavior
-            if (mode == Mode.NON_VERBAL || da == DialogueAct.SimpleGreet){
-                outputDAs.put(order, owlStr);
-            }
+
         }
         
         return outputDAs;
