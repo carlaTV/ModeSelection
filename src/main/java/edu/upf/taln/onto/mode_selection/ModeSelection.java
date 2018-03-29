@@ -238,11 +238,11 @@ public final class ModeSelection{
             float A = va.getArousal();
             
             //evaluate language and age
-            Integer Age =  profile.getAge();
+            Integer age =  profile.getAge();
             String culture = profile.getLanguage();
             float delta = 0;
             if (culture.equals("es") || culture.equals("pl")){
-                if (Age < 60){
+                if (age == null || age < 60){
                     delta = (float) 0.5;
                 }else{
                     delta = (float) 0.4;
@@ -250,7 +250,7 @@ public final class ModeSelection{
             }
             
             if (culture.equals("de") || culture.equals("tr")){
-                if (Age < 60){
+                if (age == null || age < 60){
                     delta = (float) 0.3;
                 }else{
                     delta = (float) 0.2;
